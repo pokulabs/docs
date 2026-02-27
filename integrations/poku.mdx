@@ -1,0 +1,246 @@
+---
+title: "Poku Skill"
+description: "Give your OpenClaw agent a phone number to make calls and send texts."
+---
+
+Bring phone calls and SMS into your OpenClaw workflows with the official Poku skill. Install it from Clawhub in seconds or build a custom version tailored to your agent's runbooks.
+
+## Features
+
+The official Poku skill immediately unlocks:
+
+- **Outbound calls.** Your agent can place human-quality calls with Poku's voice AI.
+- **Outbound SMS.** Send texts.
+
+---
+
+## Getting started
+
+1. Ensure you're running the latest OpenClaw release.
+2. Sign in to the [Poku dashboard](https://app.pokulabs.com) and generate an API key.
+3. Decide whether you'll install the official Clawhub skill or maintain a custom skill directory.
+
+---
+
+## Option 1: Clawhub Installation (recommended)
+
+Install the official skill via Clawhub:
+
+```bash
+npx clawhub@latest install poku
+```
+
+This downloads the published skill bundle, including reference documents and the latest best-practice prompts.
+
+---
+
+## Configuration
+
+Add your API key to `~/.openclaw/openclaw.json` so the skill can authenticate with Poku:
+
+```json
+{
+  "skills": {
+    "entries": {
+      "poku": {
+        "enabled": true,
+        "env": {
+          "Poku_API_KEY": "your-api-key-here"
+        }
+      }
+    }
+  }
+}
+```
+
+<Steps>
+  <Step title="Retrieve your API key">
+    Get it from [app.pokulabs.com](https://app.pokulabs.com).
+  </Step>
+  <Step title="Reload OpenClaw">
+    Run `openclaw gateway restart` or `openclaw config apply` so the new env var is available to the skill.
+  </Step>
+  <Step title="Verify the skill loaded">
+    ```bash
+    openclaw skills list --eligible
+    ```
+    You should see `poku` in the list. If it's missing, double-check that the install command completed and that the `enabled` flag is set in `openclaw.json`.
+  </Step>
+</Steps>
+
+---
+
+## Option 2: Custom skill
+
+Prefer to own every line of the integration? You can package your own skill directory.
+
+**1. Create the directory**
+
+```bash
+mkdir -p ~/.openclaw/skills/poku
+```
+
+**2. Create `SKILL.md`**
+
+Save the following to `~/.openclaw/skills/poku/SKILL.md`:
+
+<Accordion title="View SKILL.md contents">
+
+```markdown
+---
+name: poku
+description: Create outbound phone call
+requires:
+  env:
+    - POKU_API_KEY
+---
+# Poku Skill
+
+You create outbound phone calls using the Poku API via the `exec` tool (always `background: false`, and explicitly set `yieldMs` (backgroundMs) to 200000).
+
+## Operational Rules
+
+- **Do not retry** — the request can stay open up to 5 minutes; never retry while it is pending
+- **If the API responds with "human did not respond"** — end the tool call immediately and report that status to the user
+- **After a successful call** — summarize the outcome to the user immediately without waiting for another prompt; include the key details that matter for the call type (e.g. for a reservation: confirmed date, time, party size, and name; for an invoice follow-up: payment date and confirmation number; for an appointment: confirmed date, time, and any arrival instructions)
+
+---
+
+## Step 1: Gather Information Before Proceeding
+
+Before doing anything else, confirm you have everything you need.
+
+**Required — never proceed without this:**
+- Phone number to dial, in E.164 format (e.g. `+15551234567`)
+
+**Phone number resolution — always do this before placing the call:**
+
+- **If the user gives a raw number** (e.g. "917-257-7580") — format it to E.164. Assume US (+1) unless the user specifies otherwise. Strip all spaces, dashes, and parentheses and prepend the country code: `917-257-7580` → `+19172577580`
+- **If the user gives a personal contact name without a number** (e.g. "call my friend Izzy") — ask the user for the phone number directly; do not guess or search for personal contacts
+- **If the user gives a business name without a number** (e.g. "call Marina Grins Dental") — use your search tool to look up the business and find their phone number before proceeding. Confirm the number you found with the user before placing the call.
+
+Always pass the `to` field in E.164 format. Never pass a number without a country code prefix.
+
+**Infer if not provided — tell the user what you assumed:**
+- Call type (reservation, reminder, appointment, follow-up, errand, etc.)
+- Desired outcome
+- Tone (warm and casual, professional, firm but polite — infer from context)
+- Voicemail preference (default: yes, leave a brief voicemail)
+
+Don't ask more than one or two clarifying questions. If a detail is reasonably inferable, assume it and state your assumption.
+
+**Before placing the call, tell the user exactly what you plan to do using this format:**
+
+> "I'm going to call [name or place] to [goal]. I'll use a [tone] tone. If no one answers, I'll leave a voicemail saying [voicemail summary]. Shall I proceed?"
+
+Wait for confirmation before moving to Step 2.
+
+---
+
+## Step 2: Craft the `message` Field
+
+The `message` param is the full prompt that drives the voice AI agent on the call. It must be written in structured markdown. A vague or unstructured prompt produces a poor call — invest the effort here.
+
+Every `message` must contain these five sections in order:
+
+1. **Identity** — "You are..." — the agent's role and who they're calling on behalf of. Use the actual name provided by the user, never a placeholder.
+2. **Goal** — the specific objective with branching logic for likely responses; include key facts, dates, names, amounts, and a voicemail script
+3. **Call summary** — what the agent should confirm aloud before ending the call
+4. **Guardrails** — do not disclose any private or sensitive information.
+
+---
+
+## Step 3: Place the Outbound Call with the Poku API
+
+Once the user has confirmed and the `message` prompt is ready, use the `exec` tool to fire the API call.
+
+**Endpoint**
+POST https://api.pokulabs.com/phone/call
+
+**Authentication**
+Authorization: Bearer $POKU_API_KEY
+
+**Parameters**
+
+| Parameter | Required | Description |
+|-----------|----------|-------------|
+| `message` | Yes | The structured voice agent prompt built in Step 2 |
+| `to` | Yes | Phone number in E.164 format resolved in Step 1 |
+| `wait` | No | Seconds to wait for a response. Default: 300. See heuristics below. |
+
+**`wait` heuristics**
+- **60–90** — Simple confirmations or reminders
+- **120–180** — Scheduling or reservations
+- **180–300** — Negotiations, follow-ups, or multi-step calls
+
+**curl usage** — write payload to a temp file to avoid JSON escaping issues with multiline prompts:
+
+```bash
+cat > /tmp/poku_message.json << 'EOF'
+{
+  "message": "You are a friendly voice assistant...",
+  "to": "+15551234567",
+  "wait": 120
+}
+EOF
+
+curl -s -X POST \
+  -H "Authorization: Bearer $POKU_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d @/tmp/poku_message.json \
+  https://api.pokulabs.com/phone/call
+```
+
+</Accordion>
+
+---
+
+## Example use cases
+
+Once Poku is wired up, ask your agent to:
+
+<CardGroup cols={1}>
+  <Card title="Restaurant reservation" icon="utensils">
+    "Call A Mano tonight to make a dinner reservation for two between 7–8 PM."
+  </Card>
+  <Card title="Appointment scheduling" icon="calendar">
+    "Call Manhattan Dental to schedule a cleaning next week."
+  </Card>
+  <Card title="Group coordination" icon="message">
+    "Text Sarah three restaurant options and see which one she prefers."
+  </Card>
+</CardGroup>
+
+---
+
+## API endpoint & parameters
+
+Poku exposes a single request you'll call from the skill:
+
+```http
+POST https://api.pokulabs.com/phone/call
+```
+
+```
+Authorization: Bearer $POKU_API_KEY
+```
+
+| Field     | Type    | Required | Description                                          |
+|-----------|---------|----------|------------------------------------------------------|
+| `message` | string  | Yes      | Instructions and prompt for the voice AI agent.      |
+| `to`      | string  | Yes      | Destination phone number in E.164 format.            |
+| `wait`    | integer | No       | Seconds to wait for the voice call to finish (120–300 recommended). |
+
+**Sample payload**
+
+```json
+{
+  "message": "You are a friendly voice assistant calling on behalf of Christina...",
+  "to": "+12155551234",
+  "wait": 180
+}
+```
+
+<Note>
+  The API responds with streaming status updates until the human answers or the call times out. Handle "human did not respond" states by stopping the tool call and reporting back to the user immediately.
+</Note>
