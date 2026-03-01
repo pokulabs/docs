@@ -3,9 +3,6 @@ title: "Poku Skill"
 description: "Give your OpenClaw agent a phone number to make outbound calls."
 ---
 
-Bring phone calls into your OpenClaw workflows with the official Poku skill. Install it from Clawhub in seconds or build a custom version tailored to your agent's runbooks.
-
----
 
 ## Getting started
 
@@ -23,7 +20,7 @@ Install the official skill via Clawhub:
 npx clawhub@latest install poku
 ```
 
-This downloads the published skill bundle, including reference documents and the latest best-practice prompts.
+This downloads the published skill bundle, including reference documents and the latest best-practice prompts. This installs the Poku skill into the ~/.openclaw/workspace/skills directory.
 
 ---
 
@@ -43,7 +40,7 @@ This downloads the published skill bundle, including reference documents and the
           "poku": {
             "enabled": true,
             "env": {
-              "Poku_API_KEY": "your-api-key-here"
+              "POKU_API_KEY": "YOUR_POKU_API_KEY"
             }
           }
         }
@@ -66,7 +63,7 @@ This downloads the published skill bundle, including reference documents and the
 
 ## Option 2: Custom skill
 
-Prefer to own every line of the integration? You can package your own skill directory.
+You can manually add the Poku skill and package your own skill directory.
 
 **1. Create the directory structure**
 
@@ -325,7 +322,7 @@ Once Poku is wired up, ask your agent to:
 
 ## API endpoint & parameters
 
-Poku exposes a single request you'll call from the skill:
+Poku exposes a single endpoint you'll call from the skill:
 
 ```http
 POST https://api.pokulabs.com/phone/call
@@ -350,5 +347,5 @@ Authorization: Bearer $POKU_API_KEY
 ```
 
 <Note>
-  The API responds with streaming status updates until the human answers or the call times out. Handle "human did not respond" states by stopping the tool call and reporting back to the user immediately.
+  Handle "human did not respond" states by stopping the tool call and reporting back to the user immediately.
 </Note>
