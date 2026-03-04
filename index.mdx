@@ -33,23 +33,16 @@ This downloads the published skill bundle, including reference documents and the
   <Step title="Add your API key">
     Add your API key to `~/.openclaw/openclaw.json` so the skill can authenticate with Poku:
 
-    ```json
-    {
-      "skills": {
-        "entries": {
-          "poku": {
-            "enabled": true,
-            "env": {
-              "POKU_API_KEY": "POKU_API_KEY"
-            }
-          }
-        }
-      }
-    }
-    ```
+   ```json
+   {
+     "env": {
+       "POKU_API_KEY": "$POKU_API_KEY"
+     }
+   }
+   ```
   </Step>
   <Step title="Reload OpenClaw">
-    Run `openclaw gateway restart` or `openclaw config apply` so the new env var is available to the skill.
+    Run `openclaw gateway restart` so the new env var is available to the skill.
   </Step>
   <Step title="Verify the skill loaded">
     ```bash
@@ -84,8 +77,13 @@ Save the following to `~/.openclaw/skills/poku/SKILL.md`:
 ~~~markdown
 ---
 name: poku
-description: Makes outbound phone calls on the user's behalf using the Poku API via the `exec` tool. Example use cases include: when the user wants to call a restaurant, business, doctor's office, or any phone number to handle errands such as reservations, appointments, reminders, follow-ups, or bill disputes.
-metadata: { "openclaw": { "required": { "env": ["POKU_API_KEY"] }, "primaryEnv": "POKU_API_KEY", "homepage": "https://pokulabs.com" } }
+description: "Makes outbound phone calls on the user's behalf using the Poku API via the exec tool. Example use cases include: when the user wants to call a restaurant, business, doctor's office, or any phone number to handle errands such as reservations, appointments, reminders, follow-ups, or bill disputes."
+metadata:
+  openclaw:
+    homepage: https://pokulabs.com
+    requires:
+      env:
+        - POKU_API_KEY
 ---
 
 # Poku — Outbound Phone Calls
@@ -115,7 +113,7 @@ I'll mention I'm calling on behalf of you -- [user name].
 If no one answers, I'll leave a voicemail: [one sentence]. 
 Ok to proceed? If yes, I'll step away for a few minutes to make the call." 
 
-**At this stage, gather any extra details that would help the call (e.g. address, insurance info, reference numbers).**
+**At this stage, gather any extra details that would help the call (e.g. reference numbers).**
 
 ---
 
@@ -131,7 +129,7 @@ If no template matches, construct the message using this structure:
 ---
 
 ## Step 4: Place the Call
-
+Find the `POKU_API_KEY` in the openclaw.json file.
 Use the `exec` tool to execute the curl command and place the call (always `background: false`, and explicitly set `yieldMs` (backgroundMs) to 300000).
 
 ```bash
@@ -142,7 +140,7 @@ curl -s -X POST \
   https://api.pokulabs.com/phone/call
 ```
 
-Never retry while a request is pending — calls can stay open up to 5 minutes. If `POKU_API_KEY` is not set, stop and tell the user. For error codes, see `references/API.md`.
+Never retry while a request is pending — calls can stay open up to 5 minutes. If `POKU_API_KEY` is not set, check ~/.openclaw/openclaw.json. For error codes, see `references/API.md`.
 
 ---
 
@@ -157,6 +155,7 @@ Lead with the details that matter: confirmed date/time, name, reference number, 
 
 - `references/EXAMPLES.md` — templates for each call type; read in Step 2
 - `references/API.md` — full parameter reference and error codes; read in Step 4 if needed
+
 ~~~
 
 </div>
@@ -266,30 +265,15 @@ Get a quote from [business name] for [service description — e.g. "replacing a 
 - If no one answers, leave this voicemail: "Hi, this is a message on behalf of [user name] — I'm hoping to get a quote for [service description] at [address or general location if relevant]. Please call back at your convenience. Thank you."
 ```
 
----
-
-## Claim Status Follow-Up
-
-```
-You are a calm and professional voice assistant calling on behalf of [user name] to check on the status of an insurance claim.
-
-# Goal
-Get an update on claim [claim number] filed with [insurance company name] on or around [date filed], related to [brief description — e.g. "a water damage claim", "a car accident on February 3rd", "a medical procedure"].
-
-- Ask to speak with someone who can provide a status update on the claim.
-- Once connected, confirm the claim is on file under [user name] and [policy number if known].
-- Ask for a clear status update: is it under review, approved, denied, or waiting on additional information?
-- If additional information or documentation is needed, ask specifically what is required, where to send it, and by what deadline.
-- If the claim has been approved, ask for the expected payment amount and timeline.
-- If the claim has been denied, ask for the specific reason and whether there is an appeals process. Request that the denial reason be sent in writing if possible.
-- If they cannot provide an update on the call, ask for a case manager's name, direct contact, and an expected timeframe for follow-up.
-- If no one answers, leave this voicemail: "Hi, this is a message on behalf of [user name] regarding claim number [claim number]. We're hoping to get a status update. Please call back at your earliest convenience. Thank you."
-```
 ~~~
 
 </div>
 
 </Accordion>
+
+**5. Follow steps from "Configuration" section above to add your Poku API key**
+
+
 
 ---
 
