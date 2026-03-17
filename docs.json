@@ -9,24 +9,26 @@
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "tabs": [
+    "groups": [
       {
-        "tab": "Guides",
-        "groups": [
-          {
-            "group": "Getting started",
-            "pages": [
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-            ]
-          }
+        "group": "Poku Skill",
+        "pages": [
+          "poku-skill/installation",
+          "poku-skill/outbound-calls",
+          "poku-skill/outbound-sms",
+          "poku-skill/inbound-calls",
+          "poku-skill/inbound-sms"
+        ]
+      },
+      {
+        "group": "Reference",
+        "pages": [
+          "reserved-phone-numbers",
+          "reference/supported-countries",
+          "reference/transfer-call"
         ]
       }
-    ],
-    "global": {}
+    ]
   },
   "logo": {
     "light": "/logo/light.svg",
@@ -59,7 +61,8 @@
   },
   "footer": {
     "socials": {
-      "linkedin": "https://www.linkedin.com/company/107847423/"
+      "linkedin": "https://www.linkedin.com/company/107847423/",
+      "discord": "https://discord.gg/ujjPhGmn"
     }
   }
 }

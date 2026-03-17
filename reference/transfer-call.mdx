@@ -1,0 +1,63 @@
+---
+title: "Transfer Call & Number"
+description: "Route a live call to a human if your agent runs into something it can't handle."
+---
+
+During a voice call, if your agent runs into any issues or questions it cannot answer, it can transfer the call to you or another human.
+
+---
+
+## Configuration
+
+Add a `POKU_TRANSFER_NUMBER` to your Poku skill entry in `~/.openclaw/openclaw.json`:
+
+```json
+{
+  "skills": {
+    "entries": {
+      "poku": {
+        "enabled": true,
+        "apiKey": "$POKU_API_KEY",
+        "env": {
+          "POKU_TRANSFER_NUMBER": "$POKU_TRANSFER_NUMBER"
+        }
+      }
+    }
+  }
+}
+```
+
+The transfer number must be in E.164 format (e.g. `+12223334444`). See [Supported Countries](/reference/supported-countries) for eligible destinations.
+
+---
+
+## How it works
+
+When placing a call, the agent validates both the destination number and the transfer number before proceeding:
+
+- The destination number is validated in Step 1 of the call flow.
+- `POKU_TRANSFER_NUMBER` (or any transfer number provided by the user) must also be valid E.164 format. If invalid, the agent will ask you to correct it before placing the call.
+
+If a valid `POKU_TRANSFER_NUMBER` is set, it is included in the API payload. If not set, it is omitted and no transfer option is available on the call.
+
+---
+
+## API reference
+
+```bash
+curl -s -X POST \
+  -H "Authorization: Bearer $POKU_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "<drafted message>",
+    "to": "<normalized number>",
+    "transferNumber": "<transfer number>"
+  }' \
+  https://api.pokulabs.com/phone/call
+```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `message` | string | Yes | Structured prompt that drives the voice AI agent. |
+| `to` | string | Yes | Destination phone number in E.164 format. |
+| `transferNumber` | string | No | Number to transfer the call to if the agent cannot proceed. Must be E.164 format. |

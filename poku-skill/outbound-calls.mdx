@@ -1,0 +1,88 @@
+---
+title: "Outbound Calls"
+description: "Have your OpenClaw agent place phone calls on your behalf."
+---
+
+Once the Poku skill is installed, your agent can place human-quality outbound calls using Poku's voice AI — handling everything from restaurant reservations to appointment scheduling to business follow-ups.
+
+---
+
+## How it works
+
+When you ask your agent to make a call, it follows a structured five-step process:
+
+<Steps>
+  <Step title="Resolve the phone number">
+    The agent normalizes any number you provide to E.164 format (e.g. `+19172577580`). If you give a business name without a number, it looks it up and confirms before proceeding. It will never guess a personal contact's number.
+  </Step>
+  <Step title="Gather details and confirm intent">
+    The agent identifies what's needed for the call type, infers reasonable defaults, and presents a clear plan before doing anything:
+
+    > "I'm going to call [place] at [number] to [goal]. I'll mention I'm calling on behalf of you. If no one answers, I'll leave a voicemail: [one sentence]. Ok to proceed?"
+
+    It waits for your confirmation before moving forward.
+  </Step>
+  <Step title="Draft the call prompt">
+    The agent writes a structured prompt that drives the voice AI on the call — including identity, goal with branching logic for likely responses, and a voicemail script.
+  </Step>
+  <Step title="Place the call">
+    The agent fires the API call and stays connected while the call runs — up to 5 minutes. It never retries a pending call.
+  </Step>
+  <Step title="Report the outcome">
+    As soon as the call ends, the agent reports back with the key details: confirmed time, name, reference number, next steps. If no one answered, it tells you immediately.
+  </Step>
+</Steps>
+
+---
+
+## Example use cases
+
+<CardGroup cols={1}>
+  <Card title="Restaurant reservation" icon="utensils">
+    "Call A Mano tonight to make a dinner reservation for two between 7–8 PM."
+  </Card>
+  <Card title="Appointment scheduling" icon="calendar">
+    "Call Manhattan Dental to schedule a cleaning next week."
+  </Card>
+  <Card title="Get a quote" icon="file-invoice-dollar">
+    "Call John's Locksmith to get a quote for upgrading to a smart lock."
+  </Card>
+</CardGroup>
+
+---
+
+## API reference
+
+```http
+POST https://api.pokulabs.com/phone/call
+```
+
+```
+Authorization: Bearer $POKU_API_KEY
+```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `message` | string | Yes | Structured prompt that drives the voice AI agent on the call. |
+| `to` | string | Yes | Destination phone number in E.164 format (e.g. `+15551234567`). |
+
+**Sample payload**
+
+```json
+{
+  "message": "You are a friendly voice assistant calling on behalf of Christina to make a dinner reservation for two at 7 PM on Friday...",
+  "to": "+12155551234"
+}
+```
+
+**Error responses**
+
+| Error | Meaning | Action |
+|-------|---------|--------|
+| `"human did not respond"` | Call connected but no one answered or engaged | Agent reports back and stops |
+| `"invalid to number"` | `to` field is malformed or unroutable | Agent reports back; re-check E.164 formatting |
+| `"timeout"` | Call exceeded 5-minute limit | Agent reports back; do not retry |
+
+<Note>
+  Calls can stay open up to 5 minutes. The agent will never retry a pending call request.
+</Note>

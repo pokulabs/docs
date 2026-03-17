@@ -1,0 +1,59 @@
+---
+title: "Outbound SMS"
+description: "Have your OpenClaw agent send text messages on your behalf."
+---
+
+Once the Poku skill is installed, your OpenClaw agent can send outbound text messages. You stay in control — the agent drafts the message and confirms with you before anything is sent.
+
+<Warning>
+  Outbound SMS is intended for personal, conversational use only — not marketing or bulk messaging. Poku will automatically shut down accounts detected sending spam or promotional texts.
+</Warning>
+
+---
+
+## How it works
+
+<Steps>
+  <Step title="Draft and confirm">
+    The agent drafts the message based on what you want to say and shows it to you before sending:
+
+    > **Here's the draft:**
+    > "[message body]"
+    >
+    > Sending to [number] — good to go?
+
+    It waits for your confirmation before proceeding.
+  </Step>
+  <Step title="Send the text">
+    Once confirmed, the agent hits the Poku SMS endpoint with your API key, the message, and the destination number. The `to` number is always formatted in E.164 (e.g. `+19172577580`).
+  </Step>
+  <Step title="Confirm delivery">
+    The agent reports back: "Done — your text was sent to [number]." On any error, it reports the raw message and does not retry.
+  </Step>
+</Steps>
+
+---
+
+## API reference
+
+```http
+POST https://api.pokulabs.com/phone/sms
+```
+
+```
+Authorization: Bearer $POKU_API_KEY
+```
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `message` | string | Yes | The body of the text message. |
+| `to` | string | Yes | Destination phone number in E.164 format (e.g. `+15551234567`). |
+
+**Sample payload**
+
+```json
+{
+  "message": "Hey John! Just wanted to check if you're still on for coffee with Dan at 2 pm tomorrow.",
+  "to": "+19172577580"
+}
+```

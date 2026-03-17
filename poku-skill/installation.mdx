@@ -1,0 +1,270 @@
+---
+title: "Installation"
+description: "Install and configure the Poku skill for OpenClaw."
+---
+
+## Prerequisites
+
+1. Ensure you're running the latest OpenClaw release.
+2. Sign in to the [Poku dashboard](https://app.pokulabs.com) and generate an API key.
+
+---
+
+## Option 1: Clawhub (recommended)
+
+Install the official skill via Clawhub:
+
+```bash
+npx clawhub@latest install poku
+```
+
+This downloads the published skill bundle — including reference documents and the latest best-practice prompts — into `~/.openclaw/workspace/skills`.
+
+---
+
+## Configuration
+
+<Steps>
+  <Step title="Retrieve your API key">
+    Get it from [app.pokulabs.com](https://app.pokulabs.com).
+  </Step>
+  <Step title="Add your API key">
+    Add your API key to `~/.openclaw/openclaw.json`:
+
+    ```json
+    {
+      "skills": {
+        "entries": {
+          "poku": {
+            "enabled": true,
+            "apiKey": "POKU_API_KEY"
+          }
+        }
+      }
+    }
+    ```
+  </Step>
+  <Step title="Reload OpenClaw">
+    Run `openclaw gateway restart` so the new configuration takes effect.
+  </Step>
+  <Step title="Verify the skill loaded">
+    ```bash
+    openclaw skills list --eligible
+    ```
+    You should see `poku` in the list. If it's missing, double-check that the install command completed and that the `enabled` flag is set in `openclaw.json`.
+  </Step>
+</Steps>
+
+---
+
+## Option 2: Custom skill
+
+Prefer to own every line of the integration? You can manually create the skill directory.
+
+**1. Create the directory structure**
+
+```bash
+mkdir -p ~/.openclaw/skills/poku/references
+```
+
+This creates the main skill folder and a `references` subfolder for supporting documents.
+
+**2. Create `SKILL.md`**
+
+Save the following to `~/.openclaw/skills/poku/SKILL.md`:
+
+<Accordion title="View SKILL.md contents">
+
+<div style={{maxHeight: "400px", overflowY: "auto"}}>
+
+~~~markdown
+---
+name: poku
+description: "Makes outbound phone calls on the user's behalf using the Poku API via the exec tool. Example use cases include: when the user wants to call a restaurant, business, doctor's office, or any phone number to handle errands such as reservations, appointments, reminders, follow-ups, or bill disputes."
+metadata: { "openclaw": { "homepage": "https://pokulabs.com", "requires": { "env": ["POKU_API_KEY"] }, "primaryEnv": "POKU_API_KEY" } }
+---
+
+# Poku — Outbound Phone Calls
+
+## Step 1: Resolve the Phone Number
+
+- **Raw number** (e.g. `917-257-7580`) — strip formatting, prepend +1 (US default). Result: `+19172577580`.
+- **Personal contact name** — ask the user for the number directly; do not guess.
+- **Business name only** — use the search tool to find the number, then confirm with the user before proceeding.
+
+The result of this step is the <normalized number> passed to Step 4.
+
+---
+
+## Step 2: Gather Details and Confirm Intent
+
+Read `references/EXAMPLES.md` now. Each template shows exactly which details are required for that call type. Use the matching template to identify what is missing, then ask the user for only those details.
+
+If no template matches the call type, ask the user for: the specific goal, any names or reference numbers needed.
+
+Infer reasonable defaults and state them to the user. Do not ask for details already provided.
+
+Before moving to step 3, you MUST share the plan and receive user confirmation.
+
+> "I'm going to call [place] at [number] to [goal].
+I'll mention I'm calling on behalf of you -- [user name].
+If no one answers, I'll leave a voicemail: [one sentence].
+Ok to proceed? If yes, I'll step away for a few minutes to make the call."
+
+**At this stage, gather any extra details that would help the call (e.g. reference numbers).**
+
+---
+
+## Step 3: Draft the `message` Prompt
+
+If a template in `references/EXAMPLES.md` matches the call type, use it as the base and fill in all placeholders with real values. Never leave a placeholder unfilled.
+
+If no template matches, construct the message using this structure:
+1. **Identity** — who the agent is and who they are calling on behalf of
+2. **Goal** — the specific objective with branching logic for likely responses
+3. **Voicemail script** — exact words to leave if no one answers
+
+---
+
+## Step 4: Place the Call
+
+Use the `exec` tool to execute the curl command and place the call (always `background: false`, and explicitly set `yieldMs` (backgroundMs) to 300000).
+
+```bash
+curl -s -X POST \
+  -H "Authorization: Bearer $POKU_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"message": "<drafted message from Step 3>", "to": "<normalized number>"}' \
+  https://api.pokulabs.com/phone/call
+```
+
+Never retry while a request is pending — calls can stay open up to 5 minutes. If `POKU_API_KEY` is not set, let the user know to configure it. For error codes, see `references/API.md`.
+
+---
+
+## Step 5: Report the Outcome
+
+As soon as the tool call returns a "response" immediately inform the user. Example: "I just completed the call. I spoke to Kristin and she was able to help confirm the table for you for tomorrow at 7 pm."
+Lead with the details that matter: confirmed date/time, name, reference number, next steps. If the response contains `"human did not respond"`, stop the tool call and report immediately. On any error, report the raw message and do not retry.
+
+---
+
+## References
+
+- `references/EXAMPLES.md` — templates for each call type; read in Step 2
+- `references/API.md` — full parameter reference and error codes; read in Step 4 if needed
+~~~
+
+</div>
+
+</Accordion>
+
+**3. Create `references/API.md`**
+
+Save the following to `~/.openclaw/skills/poku/references/API.md`:
+
+<Accordion title="View API.md contents">
+
+<div style={{maxHeight: "400px", overflowY: "auto"}}>
+
+~~~markdown
+# Poku API Reference
+
+## Endpoint
+
+```
+POST https://api.pokulabs.com/phone/call
+```
+
+## Authentication
+
+```
+Authorization: Bearer $POKU_API_KEY
+```
+
+## Request Parameters
+
+| Parameter | Required | Description |
+|---|---|---|
+| `message` | Yes | Full voice agent prompt (structured markdown) |
+| `to` | Yes | Destination phone number in E.164 format (e.g. `+15551234567`) |
+
+## Error Responses
+
+| Error | Meaning | Action |
+|---|---|---|
+| `"human did not respond"` | Call connected but no one answered or engaged | Report to user and stop |
+| `"invalid to number"` | `to` field is malformed or unroutable | Report to user; re-check E.164 formatting from Step 1 |
+| `"timeout"` | Call exceeded 5-minute limit with no result | Report to user; do not retry automatically |
+
+On any error not listed above, report the raw response to the user and do not retry.
+~~~
+
+</div>
+
+</Accordion>
+
+**4. Create `references/EXAMPLES.md`**
+
+Save the following to `~/.openclaw/skills/poku/references/EXAMPLES.md`:
+
+<Accordion title="View EXAMPLES.md contents">
+
+<div style={{maxHeight: "400px", overflowY: "auto"}}>
+
+~~~markdown
+# Poku Voice Prompt Templates
+
+Find the template that most closely matches the call type and adapt it — an exact match is not required. For example, use the Dental Cleaning template for any routine medical or specialist appointment. If no template is a reasonable match, use these as structural reference and generate an original prompt following the same format: Identity and Goal (with branching logic and voicemail script). Substitute all placeholders with real values. Never leave a placeholder unfilled.
+
+---
+
+## Restaurant Reservation
+
+```
+You are a friendly voice assistant calling on behalf of [user name] to make a dinner reservation.
+
+# Goal
+Make a dinner reservation for [party size] people this [day] at [time], under the name [user name].
+- If that time is available, confirm the reservation and ask if a note is needed for a special occasion.
+- If [time] is unavailable, ask what times are open and accept an alternative within one hour of the original if reasonable. Confirm the new time back clearly before ending the call.
+- If no one answers, leave this voicemail: "Hi, this is a message on behalf of [user name] — I'm hoping to make a dinner reservation for [party size] this [day] at [time]. Please call back to confirm. Thank you."
+```
+
+---
+
+## Dental Cleaning Appointment
+
+```
+You are a friendly voice assistant calling on behalf of [user name] to schedule a dental appointment.
+
+# Goal
+Schedule a routine dental cleaning for [user name].
+- Preferred times are [preferred times], but any weekday works if those aren't available.
+- Ask for the earliest available slot and confirm it works before booking.
+- If no one answers, leave this voicemail: "Hi, this is a message on behalf of [user name] — I'm calling to schedule a routine dental cleaning. Please call back at your earliest convenience. Thank you."
+```
+
+---
+
+## Get a Quote from a Business
+
+```
+You are a friendly voice assistant calling on behalf of [user name] to get a price quote for a service.
+
+# Goal
+Get a quote from [business name] for [service description — e.g. "replacing a water heater", "painting a two-bedroom apartment", "weekly lawn maintenance"].
+
+- Briefly describe the job: [any relevant details — e.g. size, location, urgency, existing conditions].
+- Ask what information they need to provide an estimate, and answer any clarifying questions as best you can.
+- If they can give a ballpark or firm quote over the phone, note it clearly and ask what the next step would be (e.g. scheduling a site visit, sending photos).
+- If they need to send someone out first, ask what the earliest available time for a visit would be. Preferred times are [preferred times]. Accept an alternative if the preferred times aren't available and confirm the appointment clearly before ending the call.
+- If no one answers, leave this voicemail: "Hi, this is a message on behalf of [user name] — I'm hoping to get a quote for [service description] at [address or general location if relevant]. Please call back at your convenience. Thank you."
+```
+~~~
+
+</div>
+
+</Accordion>
+
+**5. Follow the Configuration steps above to add your Poku API key.**
