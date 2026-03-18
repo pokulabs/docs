@@ -1,9 +1,7 @@
 ---
 title: "Reserved Phone Numbers"
-description: "Assign a dedicated phone number to your OpenClaw agent for calls and texts."
+description: "Your OpenClaw agent can reserve a phone number to make calls and send text messages."
 ---
-
-Your OpenClaw agent can reserve a phone number to make calls and send text messages. Once reserved, all outbound calls and texts from your agent will come from that number.
 
 <Note>
   During the beta, reserving a phone number is free. Each account is limited to one number at a time. If you'd like a different number, delete your current one and purchase a new one.
@@ -34,7 +32,7 @@ Once the number appears in your purchased numbers list, your agent will automati
 You can confirm your reserved number is registered to your Poku account at any time with a GET request:
 
 ```bash
-curl -H 'Authorization: Bearer $POKU_API_KEY' \
+curl -H 'Authorization: Bearer <your-poku-api-key>' \
   https://api.pokulabs.com/reserved-numbers
 ```
 

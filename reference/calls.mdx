@@ -1,13 +1,9 @@
 ---
-title: "Outbound Calls"
-description: "Have your OpenClaw agent place phone calls on your behalf."
+title: "Calls"
+description: "Place and receive phone calls with your OpenClaw agent."
 ---
 
-Once the Poku skill is installed, your agent can place human-quality outbound calls using Poku's voice AI — handling everything from restaurant reservations to appointment scheduling to business follow-ups.
-
----
-
-## How it works
+## Outbound Calls
 
 When you ask your agent to make a call, it follows a structured five-step process:
 
@@ -35,7 +31,7 @@ When you ask your agent to make a call, it follows a structured five-step proces
 
 ---
 
-## Example use cases
+### Example use cases
 
 <CardGroup cols={1}>
   <Card title="Restaurant reservation" icon="utensils">
@@ -51,7 +47,7 @@ When you ask your agent to make a call, it follows a structured five-step proces
 
 ---
 
-## API reference
+### API reference
 
 ```http
 POST https://api.pokulabs.com/phone/call
@@ -85,4 +81,16 @@ Authorization: Bearer $POKU_API_KEY
 
 <Note>
   Calls can stay open up to 5 minutes. The agent will never retry a pending call request.
+</Note>
+
+---
+
+## Inbound Calls
+
+When someone calls your reserved number, Poku's voice agent answers and acts as a voicemail service. It greets the caller, takes down their message, and cannot share any information on your behalf.
+
+Once the call ends, Poku sends a summary of the call to your OpenClaw agent via webhook. You'll receive a notification in real-time through whichever channel you've configured (e.g. Telegram, Slack).
+
+<Note>
+  Inbound calls require a webhook to be set up. See the [Webhook](/poku-skill/webhook) page to get started.
 </Note>

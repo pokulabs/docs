@@ -3,10 +3,8 @@ title: "Installation"
 description: "Install and configure the Poku skill for OpenClaw."
 ---
 
-## Prerequisites
-
-1. Ensure you're running the latest OpenClaw release.
-2. Sign in to the [Poku dashboard](https://app.pokulabs.com) and generate an API key.
+## Prerequisite
+Sign in to the [Poku dashboard](https://app.pokulabs.com) and generate an API key.
 
 ---
 
@@ -37,12 +35,17 @@ This downloads the published skill bundle — including reference documents and 
         "entries": {
           "poku": {
             "enabled": true,
-            "apiKey": "POKU_API_KEY"
+            "apiKey": "<your-poku-api-key>",
+            "env": {
+              "POKU_TRANSFER_NUMBER": "<your-transfer-number>" //optional
+            }
           }
         }
       }
     }
     ```
+
+    `POKU_TRANSFER_NUMBER` is the number the agent will use to transfer the call to you. Must be in E.164 format (e.g. `+12223334444`)
   </Step>
   <Step title="Reload OpenClaw">
     Run `openclaw gateway restart` so the new configuration takes effect.

@@ -11,21 +11,21 @@
   "navigation": {
     "groups": [
       {
-        "group": "Poku Skill",
+        "group": "Setup",
         "pages": [
+          "index",
           "poku-skill/installation",
-          "poku-skill/outbound-calls",
-          "poku-skill/outbound-sms",
-          "poku-skill/inbound-calls",
-          "poku-skill/inbound-sms"
+          "poku-skill/webhook"
         ]
       },
       {
         "group": "Reference",
         "pages": [
-          "reserved-phone-numbers",
-          "reference/supported-countries",
-          "reference/transfer-call"
+          "reference/calls",
+          "reference/sms",
+          "reference/reserved-phone-numbers",
+          "reference/transfer-call",
+          "reference/supported-countries"
         ]
       }
     ]

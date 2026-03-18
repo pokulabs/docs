@@ -1,17 +1,15 @@
 ---
-title: "Outbound SMS"
-description: "Have your OpenClaw agent send text messages on your behalf."
+title: "SMS"
+description: "Send and receive text messages with your OpenClaw agent."
 ---
 
-Once the Poku skill is installed, your OpenClaw agent can send outbound text messages. You stay in control — the agent drafts the message and confirms with you before anything is sent.
+## Outbound SMS
+
+When you ask your agent to send a text, it drafts the message, confirms with you before sending, and reports back on delivery. You can also ask your agent to text multiple people at once — for example, "Text John, Mary, and Joe and ask what their availability is for dinner next week." The agent will send each message individually and confirm delivery for each recipient.
 
 <Warning>
   Outbound SMS is intended for personal, conversational use only — not marketing or bulk messaging. Poku will automatically shut down accounts detected sending spam or promotional texts.
 </Warning>
-
----
-
-## How it works
 
 <Steps>
   <Step title="Draft and confirm">
@@ -32,9 +30,7 @@ Once the Poku skill is installed, your OpenClaw agent can send outbound text mes
   </Step>
 </Steps>
 
----
-
-## API reference
+### API reference
 
 ```http
 POST https://api.pokulabs.com/phone/sms
@@ -57,3 +53,13 @@ Authorization: Bearer $POKU_API_KEY
   "to": "+19172577580"
 }
 ```
+
+---
+
+## Inbound SMS
+
+When someone texts your reserved number, Poku forwards the message to your OpenClaw agent via webhook. You'll receive a real-time notification through whichever channel you've configured (e.g. Telegram, Slack) and can review and respond from there.
+
+<Note>
+  Inbound SMS requires a webhook to be set up. See the [Webhook](/poku-skill/webhook) page to get started.
+</Note>
