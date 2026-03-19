@@ -11,6 +11,10 @@ description: "Your OpenClaw agent can reserve a phone number to make calls and s
 
 ## How to reserve a number
 
+There are two ways to reserve a number: via the Poku dashboard, or programmatically (either directly via the API or by asking your Poku agent).
+
+### Option 1 — Dashboard
+
 <Steps>
   <Step title="Log in to the Poku dashboard">
     Go to [app.pokulabs.com](https://app.pokulabs.com).
@@ -24,6 +28,51 @@ description: "Your OpenClaw agent can reserve a phone number to make calls and s
 </Steps>
 
 Once the number appears in your purchased numbers list, your agent will automatically use it for all outbound calls and texts.
+
+---
+
+### Option 2 — Programmatically (API or agent)
+
+You can reserve a number directly via the API, or by asking your Openclaw agent to do it for you if it has the Poku Skill installed.
+
+#### Step 1: Browse available numbers
+
+Fetch up to 10 available numbers, optionally filtering by country (`US` or `GB`) and area code:
+
+```bash
+curl -s -G \
+  -H "Authorization: Bearer <your-poku-api-key>" \
+  --data-urlencode "country=<US|GB>" \
+  --data-urlencode "areaCode=<area code>" \
+  --data-urlencode "limit=10" \
+  https://api.pokulabs.com/reserved-numbers/available
+```
+
+Omit any parameters you don't need. If you just want any available number, pass `limit=1` and skip the filters.
+
+An empty response means no numbers match — try broadening your search.
+
+#### Step 2: Reserve your chosen number
+
+Once you've identified the number you want, reserve it with a POST request:
+
+```bash
+curl -s -X POST \
+  -H "Authorization: Bearer <your-poku-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{"phoneNumber": "<selected number>"}' \
+  https://api.pokulabs.com/reserved-numbers/reserve
+```
+
+On success, the number is immediately reserved to your account and ready for use.
+
+#### Asking your agent
+
+If you have the Poku Skill installed, you can also ask your OpenClaw agent in plain language, for example:
+
+> "Reserve a phone number for me with a 916 area code."
+
+The agent will browse available numbers, confirm your selection, and complete the reservation on your behalf.
 
 ---
 
