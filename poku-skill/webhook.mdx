@@ -127,7 +127,7 @@ The Poku payload includes the following fields:
 Register your public URL from Step 1 with Poku so inbound texts get forwarded to your agent:
 
 ```bash
-curl -X POST "https://api.pokulabs.com/webhooks" -H "Authorization: Bearer <your-poku-api-key>" -H "Content-Type: application/json" -d '{"url":"<your-webhook-url>","eventTypes":["phone.sms.received","phone.call.received"],"headers":{"Authorization":"Bearer <openclaw-hooks-token>"},"reservedPhoneNumberIds":["<your-reserved-phone-id"]}'
+curl -X POST "https://api.pokulabs.com/webhooks" -H "Authorization: Bearer <your-poku-api-key>" -H "Content-Type: application/json" -d '{"url":"<your-webhook-url>","eventTypes":["phone.sms.received","phone.call.received"],"headers":{"Authorization":"Bearer <openclaw-hooks-token>"}}'
 ```
 
 ---
