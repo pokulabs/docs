@@ -14,7 +14,13 @@
         "group": "Setup",
         "pages": [
           "index",
-          "poku-skill/installation",
+          {
+            "group": "Poku Skill",
+            "pages": [
+              "poku-skill/installation",
+              "poku-skill/openclaw"
+            ]
+          },
           "poku-skill/webhook"
         ]
       },
@@ -32,7 +38,8 @@
   },
   "logo": {
     "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "dark": "/logo/dark.svg",
+    "href": "https://pokulabs.com"
   },
   "navbar": {
     "links": [

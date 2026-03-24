@@ -1,9 +1,9 @@
 ---
 title: "Webhook"
-description: "Set up a webhook so your OpenClaw agent can receive incoming texts and calls."
+description: "Set up a webhook so your agent can receive incoming texts and calls."
 ---
 
-Poku needs a public URL to forward inbound SMS and call summaries to your OpenClaw agent. How you set this up depends on where your agent is running.
+Poku needs a public URL to forward inbound SMS and call summaries to your agent. How you set this up depends on where your agent is running.
 
 ---
 
@@ -11,7 +11,7 @@ Poku needs a public URL to forward inbound SMS and call summaries to your OpenCl
 
 ### Option A — Local machine (via ngrok)
 
-If OpenClaw is running on your local machine, use ngrok to create a public tunnel.
+If your agent is running on your local machine, use ngrok to create a public tunnel.
 
 1. Create an account at [ngrok.com](https://ngrok.com).
 
@@ -27,59 +27,55 @@ If OpenClaw is running on your local machine, use ngrok to create a public tunne
    ngrok config add-authtoken <your-token>
    ```
 
-4. Start a tunnel pointed at OpenClaw's default port:
+4. Start a tunnel pointed at the port your agent is listening on:
 
    ```bash
-   ngrok http 18789
+   ngrok http <your-agent-port>
    ```
 
    ngrok will output a forwarding URL:
 
    ```
-   Forwarding https://abc123.ngrok-free.app -> http://localhost:18789
+   Forwarding https://abc123.ngrok-free.app -> http://localhost:<your-agent-port>
    ```
 
-   Copy this URL "https://abc123.ngrok-free.app" — you'll need it in Step 3.
+   Copy this URL — you'll need it in Step 3.
 
 ---
 
 ### Option B — VPS (no ngrok needed)
 
-If OpenClaw is hosted on a VPS, your agent is already on the public internet — no tunnel required.
+If your agent is hosted on a VPS, it's already on the public internet — no tunnel required.
 
 **Recommended:** Set up HTTPS using a reverse proxy such as nginx or Caddy with a free Let's Encrypt certificate. This gives you a clean, secure URL:
 
-   ```
-   https://yourdomain.com
-   ```
+```
+https://yourdomain.com
+```
 
-   And avoids exposing a raw port in your webhook URL.
+If you are not using a reverse proxy, open the port your agent is running on in your cloud provider's security group or firewall dashboard. Your webhook URL will be:
 
-
-If you are not using a reverse proxy, follow the below steps:
-1. Navigate to your cloud provider (AWS, DigitalOcean, Hetzner, etc.) and open the port that your agent is running on (ex.18789) in your provider's security group or firewall dashboard.
-
-2. Your webhook URL is your server's public IP or domain:
-
-   ```
-   http://YOUR_VPS_IP:18789
-   ```
-
-   Or if you have a domain pointed at your VPS:
-
-   ```
-   http://yourdomain.com:18789
-   ```
-
+```
+http://YOUR_VPS_IP:<your-agent-port>
+```
 
 ---
 
-## Step 2: Update your OpenClaw config
+## Step 2: Configure your agent
 
-Add a Poku mapping to the `hooks` section of `~/.openclaw/openclaw.json`. For full details on OpenClaw webhook configuration, see the [OpenClaw webhook documentation](https://docs.openclaw.ai/automation/webhook).
+Set up your agent to accept incoming POST requests at your chosen path. Refer to your agent's documentation for how to handle incoming webhook payloads.
 
-We have provided an example config below.
+The Poku payload includes the following fields:
 
+| Field | Description |
+|-------|-------------|
+| `payload.from` | Phone number the text or call was from |
+| `payload.body` | Body of the incoming text |
+| `payload.humanResponse` | Summary of the inbound call |
+
+**Example: OpenClaw config**
+
+Add a Poku mapping to the `hooks` section of `~/.openclaw/openclaw.json`. For full details, see the [OpenClaw webhook documentation](https://docs.openclaw.ai/automation/webhook).
 
 ```json
 {
@@ -112,22 +108,26 @@ We have provided an example config below.
 }
 ```
 
-The Poku payload includes the following fields:
-
-| Field | Description |
-|-------|-------------|
-| `payload.from` | Phone number the text or call was from |
-| `payload.body` | Body of the incoming text |
-| `payload.humanResponse` | Summary of the inbound call |
-
 ---
 
 ## Step 3: Register your webhook with Poku
 
-Register your public URL from Step 1 with Poku so inbound texts get forwarded to your agent:
+Register your public URL from Step 1 with Poku so inbound texts and calls get forwarded to your agent:
 
 ```bash
-curl -X POST "https://api.pokulabs.com/webhooks" -H "Authorization: Bearer <your-poku-api-key>" -H "Content-Type: application/json" -d '{"url":"<your-webhook-url>","eventTypes":["phone.sms.received","phone.call.received"],"headers":{"Authorization":"Bearer <openclaw-hooks-token>"}}'
+curl -X POST "https://api.pokulabs.com/webhooks" \
+  -H "Authorization: Bearer <your-poku-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{"url":"<your-webhook-url>","eventTypes":["phone.sms.received","phone.call.received"]}'
+```
+
+If your agent requires an authorization header on incoming requests, include it via the optional `headers` field:
+
+```bash
+curl -X POST "https://api.pokulabs.com/webhooks" \
+  -H "Authorization: Bearer <your-poku-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{"url":"<your-webhook-url>","eventTypes":["phone.sms.received","phone.call.received"],"headers":{"Authorization":"Bearer <your-agent-token>"}}'
 ```
 
 ---
@@ -152,5 +152,6 @@ curl -X GET https://api.pokulabs.com/webhooks \
 You can delete any webhook URL registered on your account:
 
 ```bash
-curl -X DELETE "https://api.pokulabs.com/webhooks/<webhook-id>" -H "Authorization: Bearer <your-poku-api-key>"
+curl -X DELETE "https://api.pokulabs.com/webhooks/<webhook-id>" \
+  -H "Authorization: Bearer <your-poku-api-key>"
 ```
