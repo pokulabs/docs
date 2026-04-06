@@ -33,6 +33,10 @@
           "reference/transfer-call",
           "reference/supported-countries"
         ]
+      },
+      {
+        "group": "API reference",
+	"openapi": "openapi.json"
       }
     ]
   },
@@ -69,7 +73,7 @@
   "footer": {
     "socials": {
       "linkedin": "https://www.linkedin.com/company/107847423/",
-      "discord": "https://discord.gg/ujjPhGmn"
+      "discord": "https://discord.gg/wZrpA3dhqg"
     }
   }
 }

@@ -1,0 +1,1345 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Interactions Controllers API",
+    "version": "1.0.0",
+    "description": "OpenAPI document for the endpoints mounted from `src/apps/api/modules/interactions/controllers/`."
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "contact"
+    },
+    {
+      "name": "notify"
+    },
+    {
+      "name": "conversation"
+    }
+  ],
+  "paths": {
+    "/interactions/contact/form/sms": {
+      "post": {
+        "tags": [
+          "contact"
+        ],
+        "summary": "Send a contact form over SMS",
+        "description": "Requires authentication. Sends a form interaction over SMS and waits for a response.",
+        "operationId": "postContactFormSms",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FormMediumInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Form response or timeout message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ContactFormDirectResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ToolWrappedContactFormResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/interactions/contact/form/whatsapp": {
+      "post": {
+        "tags": [
+          "contact"
+        ],
+        "summary": "Send a contact form over WhatsApp",
+        "description": "Requires authentication. Sends a form interaction over WhatsApp and waits for a response.",
+        "operationId": "postContactFormWhatsapp",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FormMediumInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Form response or timeout message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ContactFormDirectResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ToolWrappedContactFormResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/interactions/contact/form/slack": {
+      "post": {
+        "tags": [
+          "contact"
+        ],
+        "summary": "Send a contact form over Slack",
+        "description": "Requires authentication. Sends a form interaction over Slack and waits for a response.",
+        "operationId": "postContactFormSlack",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FormMediumInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Form response or timeout message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ContactFormDirectResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ToolWrappedContactFormResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/interactions/contact/form": {
+      "post": {
+        "tags": [
+          "contact"
+        ],
+        "summary": "Send a contact form using inline channel selection",
+        "description": "Requires authentication. Sends a form interaction and resolves the channel from the request body.",
+        "operationId": "postContactForm",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FormBasicInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Form response or timeout message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ContactFormDirectResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ToolWrappedContactFormResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/interactions/contact/form/{channelId}": {
+      "post": {
+        "tags": [
+          "contact"
+        ],
+        "summary": "Send a contact form using a channel path parameter",
+        "description": "Requires authentication. Sends a form interaction using the path channel ID, unless the service gives precedence to `channel_id` from the body.",
+        "operationId": "postContactFormByChannelId",
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FormBasicInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Form response or timeout message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ContactFormDirectResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ToolWrappedContactFormResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/interactions/contact/message/sms": {
+      "post": {
+        "tags": [
+          "contact"
+        ],
+        "summary": "Send a contact message over SMS",
+        "description": "Requires authentication. Sends a message over SMS and waits for a response.",
+        "operationId": "postContactMessageSms",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactMessageMedium"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Rendered response text",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/TextDirectResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ToolWrappedTextResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/interactions/contact/message/whatsapp": {
+      "post": {
+        "tags": [
+          "contact"
+        ],
+        "summary": "Send a contact message over WhatsApp",
+        "description": "Requires authentication. Sends a message over WhatsApp and waits for a response.",
+        "operationId": "postContactMessageWhatsapp",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactMessageMedium"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Rendered response text",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/TextDirectResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ToolWrappedTextResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/interactions/contact/message/slack": {
+      "post": {
+        "tags": [
+          "contact"
+        ],
+        "summary": "Send a contact message over Slack",
+        "description": "Requires authentication. Sends a message over Slack and waits for a response.",
+        "operationId": "postContactMessageSlack",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactMessageMedium"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Rendered response text",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/TextDirectResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ToolWrappedTextResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/interactions/contact/message": {
+      "post": {
+        "tags": [
+          "contact"
+        ],
+        "summary": "Send a contact message using inline channel selection",
+        "description": "Requires authentication. Sends a message and resolves the channel from the request body.",
+        "operationId": "postContactMessage",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactBasic"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Rendered response text",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/TextDirectResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ToolWrappedTextResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/interactions/contact/message/{channelId}": {
+      "post": {
+        "tags": [
+          "contact"
+        ],
+        "summary": "Send a contact message using a channel path parameter",
+        "description": "Requires authentication. Sends a message using the path channel ID, unless the service gives precedence to `channel_id` from the body.",
+        "operationId": "postContactMessageByChannelId",
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactBasic"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Rendered response text",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/TextDirectResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ToolWrappedTextResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/interactions/conversation/call": {
+      "post": {
+        "tags": [
+          "conversation"
+        ],
+        "summary": "Start a conversation call",
+        "description": "Requires authentication. Places a call interaction and waits for the callee response.",
+        "operationId": "postConversationCall",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConversationCall"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Rendered response text",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/TextDirectResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ToolWrappedTextResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/interactions/notify": {
+      "post": {
+        "tags": [
+          "notify"
+        ],
+        "summary": "Send a notification using inline channel selection",
+        "description": "Requires authentication. Sends a notification without waiting for a reply.",
+        "operationId": "postNotify",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotifyBasic"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created interaction identifier",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/NotifyDirectResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ToolWrappedNotifyResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/interactions/notify/{channelId}": {
+      "post": {
+        "tags": [
+          "notify"
+        ],
+        "summary": "Send a notification using a channel path parameter",
+        "description": "Requires authentication. Sends a notification using the path channel ID, unless the service gives precedence to `channel_id` from the body.",
+        "operationId": "postNotifyByChannelId",
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotifyBasic"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created interaction identifier",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/NotifyDirectResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ToolWrappedNotifyResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/interactions/notify/sms": {
+      "post": {
+        "tags": [
+          "notify"
+        ],
+        "summary": "Send a notification over SMS",
+        "description": "Requires authentication. Sends a notification over SMS without waiting for a reply.",
+        "operationId": "postNotifySms",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotifyMessageMedium"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created interaction identifier",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/NotifyDirectResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ToolWrappedNotifyResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/interactions/notify/whatsapp": {
+      "post": {
+        "tags": [
+          "notify"
+        ],
+        "summary": "Send a notification over WhatsApp",
+        "description": "Requires authentication. Sends a notification over WhatsApp without waiting for a reply.",
+        "operationId": "postNotifyWhatsapp",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotifyMessageMedium"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created interaction identifier",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/NotifyDirectResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ToolWrappedNotifyResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/interactions/notify/slack": {
+      "post": {
+        "tags": [
+          "notify"
+        ],
+        "summary": "Send a notification over Slack",
+        "description": "Requires authentication. Sends a notification over Slack without waiting for a reply.",
+        "operationId": "postNotifySlack",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotifyMessageMedium"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created interaction identifier",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/NotifyDirectResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ToolWrappedNotifyResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "BadRequest": {
+        "description": "Validation or request error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Authentication required",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "description": "Generic error shape returned by Express error middleware.",
+        "additionalProperties": true
+      },
+      "TextDirectResponse": {
+        "type": "string",
+        "description": "Rendered text response, timeout message, or image-links summary."
+      },
+      "NotifyDirectResponse": {
+        "type": "object",
+        "required": [
+          "interaction_id"
+        ],
+        "properties": {
+          "interaction_id": {
+            "type": "string",
+            "description": "Analytics interaction identifier returned by the executor."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ContactFormDirectResponse": {
+        "oneOf": [
+          {
+            "type": "string",
+            "description": "Timeout or no-response message."
+          },
+          {
+            "type": "object",
+            "required": [
+              "values",
+              "content"
+            ],
+            "properties": {
+              "values": {
+                "type": "object",
+                "additionalProperties": true,
+                "description": "Submitted form values."
+              },
+              "content": {
+                "type": "string",
+                "description": "Raw form response body."
+              }
+            },
+            "additionalProperties": false
+          }
+        ]
+      },
+      "ToolWrappedTextResponse": {
+        "type": "object",
+        "required": [
+          "results"
+        ],
+        "properties": {
+          "results": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/TextToolResult"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "ToolWrappedNotifyResponse": {
+        "type": "object",
+        "required": [
+          "results"
+        ],
+        "properties": {
+          "results": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/NotifyToolResult"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "ToolWrappedContactFormResponse": {
+        "type": "object",
+        "required": [
+          "results"
+        ],
+        "properties": {
+          "results": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/ContactFormToolResult"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "TextToolResult": {
+        "type": "object",
+        "required": [
+          "toolCallId",
+          "result"
+        ],
+        "properties": {
+          "toolCallId": {
+            "type": "string"
+          },
+          "result": {
+            "$ref": "#/components/schemas/TextDirectResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NotifyToolResult": {
+        "type": "object",
+        "required": [
+          "toolCallId",
+          "result"
+        ],
+        "properties": {
+          "toolCallId": {
+            "type": "string"
+          },
+          "result": {
+            "$ref": "#/components/schemas/NotifyDirectResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ContactFormToolResult": {
+        "type": "object",
+        "required": [
+          "toolCallId",
+          "result"
+        ],
+        "properties": {
+          "toolCallId": {
+            "type": "string"
+          },
+          "result": {
+            "$ref": "#/components/schemas/ContactFormDirectResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Message": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000
+      },
+      "LongMessage": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 10000
+      },
+      "PhoneOrHandle": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 20
+      },
+      "WaitTime": {
+        "type": "number",
+        "minimum": 1,
+        "maximum": 600,
+        "default": 590
+      },
+      "FollowUpTime": {
+        "type": "number",
+        "minimum": 1,
+        "maximum": 60000,
+        "default": 60000
+      },
+      "Medium": {
+        "type": "string",
+        "enum": [
+          "sms",
+          "whatsapp",
+          "slack"
+        ]
+      },
+      "CaptureFormFieldOption": {
+        "type": "object",
+        "required": [
+          "label",
+          "value"
+        ],
+        "properties": {
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "value": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          }
+        },
+        "additionalProperties": false
+      },
+      "CaptureFormStringValidationRule": {
+        "type": "object",
+        "required": [
+          "title",
+          "pattern"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "pattern": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "description": "Must be a valid regular expression."
+          }
+        },
+        "additionalProperties": false
+      },
+      "CaptureFormField": {
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "type"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z0-9_-]+$"
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "textarea",
+              "email",
+              "tel",
+              "select",
+              "checkbox",
+              "address"
+            ]
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "placeholder": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "helper_text": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "options": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "#/components/schemas/CaptureFormFieldOption"
+            },
+            "description": "Only valid for `select` fields and must be present there."
+          },
+          "validations": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "$ref": "#/components/schemas/CaptureFormStringValidationRule"
+            },
+            "description": "Only valid for `text`, `textarea`, `email`, and `tel` fields."
+          }
+        },
+        "additionalProperties": false
+      },
+      "FormBasicInput": {
+        "type": "object",
+        "required": [
+          "title",
+          "fields",
+          "to"
+        ],
+        "properties": {
+          "message": {
+            "$ref": "#/components/schemas/LongMessage",
+            "description": "The message sent before the form link is opened.",
+            "default": "Please fill out this form using the secure link."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "brand_image_url": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2000
+          },
+          "submit_label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          "fields": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": {
+              "$ref": "#/components/schemas/CaptureFormField"
+            }
+          },
+          "to": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Customer phone number in E164 format."
+          },
+          "from": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Agent phone number in E164 format."
+          },
+          "channel_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "wait_time": {
+            "$ref": "#/components/schemas/WaitTime"
+          },
+          "follow_up_time": {
+            "$ref": "#/components/schemas/FollowUpTime"
+          },
+          "medium": {
+            "$ref": "#/components/schemas/Medium"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FormMediumInput": {
+        "type": "object",
+        "required": [
+          "title",
+          "fields",
+          "to"
+        ],
+        "properties": {
+          "message": {
+            "$ref": "#/components/schemas/LongMessage",
+            "description": "The message sent before the form link is opened.",
+            "default": "Please fill out this form using the secure link."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "brand_image_url": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2000
+          },
+          "submit_label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          "fields": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": {
+              "$ref": "#/components/schemas/CaptureFormField"
+            }
+          },
+          "to": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Customer phone number in E164 format."
+          },
+          "from": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "description": "Agent phone number in E164 format."
+          },
+          "wait_time": {
+            "$ref": "#/components/schemas/WaitTime"
+          },
+          "follow_up_time": {
+            "$ref": "#/components/schemas/FollowUpTime"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ContactBasic": {
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "channel_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "medium": {
+            "$ref": "#/components/schemas/Medium"
+          },
+          "message": {
+            "$ref": "#/components/schemas/Message"
+          },
+          "to": {
+            "$ref": "#/components/schemas/PhoneOrHandle"
+          },
+          "from": {
+            "$ref": "#/components/schemas/PhoneOrHandle"
+          },
+          "wait_time": {
+            "$ref": "#/components/schemas/WaitTime"
+          },
+          "follow_up_time": {
+            "$ref": "#/components/schemas/FollowUpTime"
+          },
+          "link_enabled": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ContactMessageMedium": {
+        "type": "object",
+        "required": [
+          "message",
+          "to"
+        ],
+        "properties": {
+          "message": {
+            "$ref": "#/components/schemas/Message"
+          },
+          "to": {
+            "$ref": "#/components/schemas/PhoneOrHandle"
+          },
+          "from": {
+            "$ref": "#/components/schemas/PhoneOrHandle"
+          },
+          "wait_time": {
+            "$ref": "#/components/schemas/WaitTime"
+          },
+          "follow_up_time": {
+            "$ref": "#/components/schemas/FollowUpTime"
+          },
+          "link_enabled": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NotifyBasic": {
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "channel_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "medium": {
+            "$ref": "#/components/schemas/Medium"
+          },
+          "message": {
+            "$ref": "#/components/schemas/Message"
+          },
+          "to": {
+            "$ref": "#/components/schemas/PhoneOrHandle"
+          },
+          "from": {
+            "$ref": "#/components/schemas/PhoneOrHandle"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NotifyMessageMedium": {
+        "type": "object",
+        "required": [
+          "message",
+          "to"
+        ],
+        "properties": {
+          "message": {
+            "$ref": "#/components/schemas/Message"
+          },
+          "to": {
+            "$ref": "#/components/schemas/PhoneOrHandle"
+          },
+          "from": {
+            "$ref": "#/components/schemas/PhoneOrHandle"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ConversationCall": {
+        "type": "object",
+        "required": [
+          "prompt",
+          "to"
+        ],
+        "properties": {
+          "prompt": {
+            "$ref": "#/components/schemas/Message"
+          },
+          "to": {
+            "$ref": "#/components/schemas/PhoneOrHandle"
+          },
+          "from": {
+            "$ref": "#/components/schemas/PhoneOrHandle"
+          },
+          "transfer_to": {
+            "$ref": "#/components/schemas/PhoneOrHandle"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
+
