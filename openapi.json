@@ -3,7 +3,7 @@
   "info": {
     "title": "Interactions Controllers API",
     "version": "1.0.0",
-    "description": "OpenAPI document for the endpoints mounted from `src/apps/api/modules/interactions/controllers/`."
+    "description": "OpenAPI document for Poku API."
   },
   "servers": [
     {
