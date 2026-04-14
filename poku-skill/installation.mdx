@@ -1,5 +1,5 @@
 ---
-title: "Poku Skill"
+title: "Installation"
 description: "Install and configure the Poku skill for any agent that supports the Agent Skills format, including Cursor, Claude Code, OpenCode, OpenAI Codex, and Pi."
 ---
 
@@ -8,39 +8,19 @@ Sign in to the [Poku dashboard](https://dashboard.pokulabs.com) and generate an 
 
 ---
 
-## Method 1: NPX Skills CLI
-
-```bash
-npx skills add pokulabs/skills
-```
-
-## Method 2: Cursor Marketplace
-
-In Cursor, go to **Settings → Rules → Add Rule → Remote Rule (GitHub)** and enter:
-
-```
-pokulabs/skills
-```
-
-## Method 3: Manual Installation
-
-Clone or download the repository at [pokulabs/skills](https://github.com/pokulabs/skills) and copy the `poku` folder to your agent's skills directory:
-
-| Agent | Directory |
-|-------|-----------|
-| Claude Code | `~/.claude/skills/` |
-| Cursor | `~/.cursor/skills/` |
-| OpenCode | `~/.config/opencode/skills/` |
-| OpenAI Codex | `~/.codex/skills/` |
-| Pi | `~/.pi/agent/skills/` |
-
-## Method 4: Clawhub (OpenClaw)
+## Method 1: Clawhub (OpenClaw)
 
 ```bash
 npx clawhub@latest install poku
 ```
 
 For full setup details, see the [OpenClaw](/poku-skill/openclaw) page.
+
+## Method 2: NPX Skills CLI
+
+```bash
+npx skills add pokulabs/skills
+```
 
 ## Configuration
 
