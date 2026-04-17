@@ -9,29 +9,83 @@
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "groups": [
+    "tabs": [
       {
-        "group": "Setup",
-        "pages": [
-          "index",
+        "tab": "Documentation",
+        "groups": [
           {
-            "group": "Poku Skill",
+            "group": "Setup",
             "pages": [
-              "poku-skill/installation",
-              "poku-skill/openclaw"
+              "index",
+              {
+                "group": "Poku Skill",
+                "pages": [
+                  "poku-skill/installation",
+                  "poku-skill/openclaw"
+                ]
+              },
+              "poku-skill/webhook"
             ]
           },
-          "poku-skill/webhook"
+          {
+            "group": "Reference",
+            "pages": [
+              "reference/calls",
+              "reference/sms",
+              "reference/reserved-phone-numbers",
+              "reference/transfer-call",
+              "reference/supported-countries"
+            ]
+          }
         ]
       },
       {
-        "group": "Reference",
-        "pages": [
-          "reference/calls",
-          "reference/sms",
-          "reference/reserved-phone-numbers",
-          "reference/transfer-call",
-          "reference/supported-countries"
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Calls",
+            "pages": [
+              "api-reference/calls/place-outbound-call",
+              "api-reference/calls/list-calls",
+              "api-reference/calls/get-call"
+            ]
+          },
+          {
+            "group": "Messages",
+            "pages": [
+              "api-reference/messages/send-sms",
+              "api-reference/messages/send-whatsapp",
+              "api-reference/messages/send-slack",
+              "api-reference/messages/list-messages",
+              "api-reference/messages/get-messages"
+            ]
+          },
+          {
+            "group": "Forms",
+            "pages": [
+              "api-reference/forms/send-form-sms",
+              "api-reference/forms/send-form-whatsapp",
+              "api-reference/forms/send-form-slack"
+            ]
+          },
+          {
+            "group": "Numbers",
+            "pages": [
+              "api-reference/numbers/list-available-numbers",
+              "api-reference/numbers/list-reserved-numbers",
+              "api-reference/numbers/reserve-number",
+              "api-reference/numbers/release-number"
+            ]
+          },
+          {
+            "group": "Webhooks",
+            "pages": [
+              "api-reference/webhooks/create-webhook",
+              "api-reference/webhooks/delete-webhook",
+              "api-reference/webhooks/update-webhook",
+              "api-reference/webhooks/list-webhooks"
+            ]
+          }
         ]
       }
     ]

@@ -63,15 +63,53 @@ http://YOUR_VPS_IP:<your-agent-port>
 
 ## Step 2: Configure your agent
 
-Set up your agent to accept incoming POST requests at your chosen path. Refer to your agent's documentation for how to handle incoming webhook payloads.
+Set up your agent to accept incoming POST requests at your chosen path. Poku sends a `POST` request with a JSON body for each event type.
 
-The Poku payload includes the following fields:
+### SMS event (`phone.sms.received`)
+
+```json
+{
+  "user_id": "usr_abc123",
+  "event_type": "phone.sms.received",
+  "payload": {
+    "reserved_number": "+14155550100",
+    "from": "+14155550199",
+    "to": "+14155550100",
+    "body": "Hey, are you available tomorrow?",
+    "media_urls": [],
+    "received_at": "2024-01-15T10:30:00Z"
+  }
+}
+```
 
 | Field | Description |
 |-------|-------------|
-| `payload.from` | Phone number the text or call was from |
-| `payload.body` | Body of the incoming text |
-| `payload.humanResponse` | Summary of the inbound call |
+| `payload.reserved_number` | Your Poku number that received the message |
+| `payload.from` | Phone number that sent the message |
+| `payload.to` | Phone number that received the message |
+| `payload.body` | Text content of the message |
+| `payload.media_urls` | Array of media URLs if the message included attachments (MMS) |
+| `payload.received_at` | ISO 8601 timestamp of when the message was received |
+
+### Call event (`phone.call.received`)
+
+```json
+{
+  "user_id": "usr_abc123",
+  "event_type": "phone.call.received",
+  "payload": {
+    "summary": "Caller asked about appointment availability for next week.",
+    "from": "+14155550199",
+    "to": "+14155550100"
+  }
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| `payload.summary` | AI-generated summary of the call |
+| `payload.from` | Phone number that placed the call |
+| `payload.to` | Your Poku number that received the call |
 
 **Example: OpenClaw config**
 
@@ -101,7 +139,7 @@ Add a Poku mapping to the `hooks` section of `~/.openclaw/openclaw.json`. For fu
         "deliver": true,
         "channel": "telegram",
         "to": "<your-telegram-id>",
-        "messageTemplate": "You received a message {{payload.payload.from}}: \"{{payload.payload.body}}\" {{payload.payload.humanResponse}}"
+        "messageTemplate": "You received a message from {{payload.payload.from}}: \"{{payload.payload.body}}{{payload.payload.summary}}\""
       }
     ]
   }
