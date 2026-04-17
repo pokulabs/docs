@@ -39,7 +39,6 @@
           "calls"
         ],
         "summary": "Place Outbound Call",
-        "description": "Place a new outbound phone call.",
         "operationId": "createCall",
         "requestBody": {
           "required": true,
@@ -49,31 +48,6 @@
                 "$ref": "#/components/schemas/ConversationCall"
               }
             }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Call response payload",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/CallResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/ToolWrappedCallResponse"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
           }
         }
       },
@@ -96,25 +70,7 @@
               "default": 50
             }
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of calls",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CallRecord"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          }
-        }
+        ]
       }
     },
     "/calls/{callId}": {
@@ -135,25 +91,7 @@
               "format": "uuid"
             }
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "Call record",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CallRecord"
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
-          }
-        }
+        ]
       }
     },
     "/messages/sms": {
@@ -172,31 +110,6 @@
                 "$ref": "#/components/schemas/ContactMessageMedium"
               }
             }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Rendered response text",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/TextDirectResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/ToolWrappedTextResponse"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -225,31 +138,6 @@
               }
             }
           }
-        },
-        "responses": {
-          "200": {
-            "description": "Rendered response text",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/TextDirectResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/ToolWrappedTextResponse"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          }
         }
       }
     },
@@ -269,31 +157,6 @@
                 "$ref": "#/components/schemas/SlackMessage"
               }
             }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Rendered response text",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/TextDirectResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/ToolWrappedTextResponse"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -318,25 +181,7 @@
               "default": 50
             }
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of messages",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MessageRecord"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          }
-        }
+        ]
       }
     },
     "/messages/{messageId}": {
@@ -357,25 +202,7 @@
               "format": "uuid"
             }
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "Message record",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MessageRecord"
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
-          }
-        }
+        ]
       }
     },
     "/messages/{channelId}": {
@@ -406,31 +233,6 @@
               }
             }
           }
-        },
-        "responses": {
-          "200": {
-            "description": "Rendered response text",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/TextDirectResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/ToolWrappedTextResponse"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          }
         }
       }
     },
@@ -440,7 +242,7 @@
           "forms"
         ],
         "summary": "Send a form via SMS",
-        "description": "Send a link to a form via SMS. When the recipient completes and submits the form, the contents are returned as a tool call response.",
+        "description": "Send a link to a form via SMS. When the recipient completes and submits the form, the contents are returned as an HTTP response OR via webhook.",
         "operationId": "sendSmsForm",
         "requestBody": {
           "required": true,
@@ -450,31 +252,6 @@
                 "$ref": "#/components/schemas/FormMediumInput"
               }
             }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Form response or timeout message",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/ContactFormDirectResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/ToolWrappedContactFormResponse"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -503,31 +280,6 @@
               }
             }
           }
-        },
-        "responses": {
-          "200": {
-            "description": "Form response or timeout message",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/ContactFormDirectResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/ToolWrappedContactFormResponse"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          }
         }
       }
     },
@@ -547,31 +299,6 @@
                 "$ref": "#/components/schemas/SlackFormInput"
               }
             }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Form response or timeout message",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/ContactFormDirectResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/ToolWrappedContactFormResponse"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -603,31 +330,6 @@
                 "$ref": "#/components/schemas/FormBasicInput"
               }
             }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Form response or timeout message",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/ContactFormDirectResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/ToolWrappedContactFormResponse"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -665,28 +367,7 @@
             },
             "description": "Only used for US numbers."
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "Available phone numbers",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AvailableReservedNumber"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          }
-        }
+        ]
       }
     },
     "/numbers": {
@@ -696,25 +377,7 @@
         ],
         "summary": "List reserved numbers",
         "description": "Returns all phone numbers reserved on your account.",
-        "operationId": "listReservedNumbersAlias",
-        "responses": {
-          "200": {
-            "description": "Reserved numbers for the authenticated user",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ReservedPhoneNumber"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          }
-        }
+        "operationId": "listReservedNumbersAlias"
       }
     },
     "/numbers/reserve": {
@@ -723,7 +386,7 @@
           "numbers"
         ],
         "summary": "Reserve a number",
-        "description": "Reserve a phone number for your account. Once reserved, it can be used for outbound calls and texts. To receive inbound calls and texts, set up a webhook using the Create webhook endpoint.\n\nUse [List available numbers](/api-reference/numbers/list-available-numbers) to find a number first. During beta, each account is limited to one reserved number at a time.",
+        "description": "Reserve a phone number for your account. Once reserved, it can be used for calling and texting.\n\nUse [List available numbers](/api-reference/numbers/list-available-numbers) to find a number first. During beta, each account is limited to one reserved number at a time.",
         "operationId": "reserveNumberAlias",
         "requestBody": {
           "required": true,
@@ -733,24 +396,6 @@
                 "$ref": "#/components/schemas/ReservePhoneNumberRequest"
               }
             }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Reserved number record",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReservedPhoneNumber"
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -773,18 +418,7 @@
               "format": "uuid"
             }
           }
-        ],
-        "responses": {
-          "204": {
-            "$ref": "#/components/responses/NoContent"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
-          }
-        }
+        ]
       }
     },
     "/numbers/{reservedNumberId}/messages": {
@@ -816,28 +450,7 @@
               "default": 50
             }
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "Recent inbound and outbound messages",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ReservedNumberMessage"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
-          }
-        }
+        ]
       }
     },
     "/webhooks": {
@@ -846,7 +459,7 @@
           "webhooks"
         ],
         "summary": "Create webhook",
-        "description": "Register a webhook URL to receive inbound call and SMS events on your reserved number.",
+        "description": "Register a webhook URL to receive Poku events on your reserved number.",
         "operationId": "createReservedNumberWebhook",
         "requestBody": {
           "required": true,
@@ -857,27 +470,6 @@
               }
             }
           }
-        },
-        "responses": {
-          "200": {
-            "description": "Created webhook",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReservedNumberWebhook"
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
-          }
         }
       },
       "get": {
@@ -886,22 +478,7 @@
         ],
         "summary": "List webhooks",
         "description": "Returns all webhooks registered on your account.",
-        "operationId": "listReservedNumberWebhooks",
-        "responses": {
-          "200": {
-            "description": "Webhook subscriptions",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReservedNumberWebhookListResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          }
-        }
+        "operationId": "listReservedNumberWebhooks"
       }
     },
     "/webhooks/{webhookId}": {
@@ -922,18 +499,7 @@
               "format": "uuid"
             }
           }
-        ],
-        "responses": {
-          "204": {
-            "$ref": "#/components/responses/NoContent"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
-          }
-        }
+        ]
       },
       "patch": {
         "tags": [
@@ -962,27 +528,6 @@
               }
             }
           }
-        },
-        "responses": {
-          "200": {
-            "description": "Updated webhook",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReservedNumberWebhook"
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
-          }
         }
       }
     }
@@ -992,7 +537,7 @@
       "bearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "description": "Authentication header containing your Poku API key. Find it in the dashboard. The format is \"Bearer YOUR_API_KEY\""
+        "description": "Authentication header containing your Poku API key. Find it in the [Poku dashboard](https://dashboard.pokulabs.com/). The format is \"Bearer YOUR_API_KEY\""
       }
     },
     "responses": {
@@ -1367,12 +912,11 @@
         "properties": {
           "id": {
             "type": "string",
-            "pattern": "^[a-zA-Z0-9_-]+$",
             "description": "Unique identifier for the field. Used as the key in the returned response payload. Accepts letters, numbers, hyphens, and underscores."
           },
           "label": {
             "type": "string",
-            "description": "The text displayed to the recipient above the field."
+            "description": "The text displayed above the field."
           },
           "type": {
             "type": "string",
@@ -1389,7 +933,8 @@
           },
           "required": {
             "type": "boolean",
-            "description": "Whether the field must be completed before the form can be submitted."
+            "description": "Whether the field must be completed before the form can be submitted.",
+            "default": false
           },
           "placeholder": {
             "type": "string",
@@ -1411,7 +956,7 @@
             "items": {
               "$ref": "#/components/schemas/CaptureFormStringValidationRule"
             },
-            "description": "Custom validation rules applied to the field. Each rule requires a `title` \u2014 the error message shown if the rule fails \u2014 and a `pattern`, a regular expression the input must match.\n\nOnly valid for `text`, `textarea`, `email`, and `phone_number` fields.\n\n**Example:**\n```json\n[\n  { \"title\": \"Must be 5 to 10 characters long\", \"pattern\": \"^.{5,10}$\" },\n  { \"title\": \"Starts with a letter\", \"pattern\": \"^[A-Za-z].*\" },\n  { \"title\": \"Does not contain Z\", \"pattern\": \"^(?!.*[Z]).*$\" }\n]\n```"
+            "description": "Custom validation rules applied to the field. Each rule requires a `title` \u2014 which is shown below the field, and a `pattern`, a regular expression the input must match.\n\nOnly valid for `text`, `textarea`, `email`, and `phone_number` fields.\n\n**Example:**\n```json\n[\n  { \"title\": \"Must be 5 to 10 characters long\", \"pattern\": \"^.{5,10}$\" },\n  { \"title\": \"Starts with a letter\", \"pattern\": \"^[A-Za-z].*\" },\n  { \"title\": \"Does not contain Z\", \"pattern\": \"^(?!.*[Z]).*$\" }\n]\n```"
           }
         },
         "additionalProperties": false
@@ -1499,7 +1044,7 @@
           "message": {
             "type": "string",
             "default": "Please fill out this form: {{url}}",
-            "description": "The SMS body sent to the recipient. `{{url}}` inserts the full form link. `{{reply_token}}` inserts only the form ID \u2014 for use with approved templates that lock the base URL and only accept a variable token at the end."
+            "description": "The SMS body sent to the recipient. `{{url}}` inserts the full form link. `{{reply_token}}` inserts only the form ID.\n\n**Example URL:** `https://dashboard.pokulabs.com/reply/EniUSmrc_5hisuSf`\n\n**Example reply token:** `EniUSmrc_5hisuSf`"
           },
           "title": {
             "type": "string",
@@ -1507,7 +1052,7 @@
           },
           "description": {
             "type": "string",
-            "description": "A subtitle or description shown below the title on the form."
+            "description": "A subtitle shown below the title on the form."
           },
           "brand_image_url": {
             "type": "string",
@@ -1517,7 +1062,7 @@
           "submit_label": {
             "type": "string",
             "default": "Submit",
-            "description": "Label on the form's submit button. Defaults to `\"Submit\"`."
+            "description": "Label on the form's submit button."
           },
           "fields": {
             "type": "array",
@@ -1532,21 +1077,21 @@
           },
           "from": {
             "type": "string",
-            "description": "Defaults to your reserved number. If you haven't reserved one, falls back to a Poku number.\n\nTo use your own number, provide it in E.164 format \u2014 we'll check your Twilio account first, then MessageBird. Your number must be approved for A2P texting. Configure your credentials on the [Integrations page](https://dashboard.pokulabs.com/integrations)."
+            "description": "Defaults to your Poku reserved number. If you don't have one, falls back to a Poku shared number.\n\nYou can also bring your own number from Twilio or Messagebird. Configure your credentials on the [Integrations page](https://dashboard.pokulabs.com/integrations) and pass the number here in E.164 format. If it's a US number, it must be approved for A2P texting."
           },
           "wait_time": {
             "type": "number",
             "minimum": 1,
             "maximum": 600,
             "default": null,
-            "description": "The number of seconds the API request is held open waiting for the form to be submitted.\n\nWhen the window expires, the agent moves on. The recipient can still submit the form within the `follow_up_time` window (see below)."
+            "description": "Either this parameter or `follow_up_time` must be supplied.\n\nThe number of seconds the API request is held open waiting for the form to be submitted. When the window expires, the agent moves on. The recipient can still submit the form within the `follow_up_time` window."
           },
           "follow_up_time": {
             "type": "number",
             "minimum": 1,
             "maximum": 60000,
             "default": null,
-            "description": "After `wait_time` expires, how long Poku continues to accept a form submission. When the form is submitted within this window, the response is sent to the webhook attached to your account."
+            "description": "Either this parameter or `wait_time` must be supplied.\n\nAfter `wait_time` expires, how long Poku continues to accept a form submission. When the form is submitted within this window, the response is sent to any webhooks you've configured."
           }
         },
         "additionalProperties": false
@@ -1669,29 +1214,30 @@
         ],
         "properties": {
           "message": {
-            "$ref": "#/components/schemas/Message"
+            "$ref": "#/components/schemas/Message",
+            "description": "The content of the message."
           },
           "to": {
             "type": "string",
-            "description": "The number you want to message, in E.164 format. See [supported countries](https://docs.pokulabs.com/reference/supported-countries)."
+            "description": "The number you want to message, in E.164 format. See supported countries for Poku numbers [here](https://docs.pokulabs.com/reference/supported-countries)."
           },
           "from": {
             "type": "string",
-            "description": "Defaults to your reserved number. If you haven't reserved one, falls back to a Poku number.\n\nTo use your own number, provide it in E.164 format \u2014 we'll check your Twilio account first, then MessageBird. Your number must be approved for A2P texting. Configure your credentials on the [Integrations page](https://dashboard.pokulabs.com/integrations)."
+            "description": "Defaults to your Poku reserved number. If you don't have one, falls back to a Poku shared number.\n\nYou can also bring your own number from Twilio or Messagebird. Configure your credentials on the [Integrations page](https://dashboard.pokulabs.com/integrations) and pass the number here in E.164 format. If it's a US number, it must be approved for A2P texting."
           },
           "wait_time": {
             "type": "number",
             "minimum": 1,
             "maximum": 600,
             "default": null,
-            "description": "Duration in seconds that the agent waits for a reply after the message is sent.\n\nWhen null, no reply is captured. When set, Poku listens for a response within that window and returns it in the tool call response."
+            "description": "When undefined or not supplied, no reply is captured.\n\nWhen supplied, this is the number of seconds the API request is held open waiting for a reply. Poku returns the reply in the HTTP response."
           },
           "follow_up_time": {
             "type": "number",
             "minimum": 1,
             "maximum": 60000,
             "default": null,
-            "description": "Duration in seconds to keep listening for a reply after the `wait_time` window closes.\n\nWhen a reply arrives within this window, Poku forwards it to the webhook attached to your account."
+            "description": "Duration in seconds to keep listening for a reply after the `wait_time` window closes.\n\nWhen a reply arrives within this window, Poku sends it to any webhooks you've configured."
           }
         },
         "additionalProperties": false
@@ -1755,7 +1301,7 @@
           },
           "from": {
             "type": "string",
-            "description": "Defaults to your reserved number. If you haven't reserved one, falls back to a Poku number.\n\nTo use your own number, provide it in E.164 format \u2014 we'll check your Twilio account first, then MessageBird. Configure your credentials on the [Integrations page](https://dashboard.pokulabs.com/integrations)."
+            "description": "Defaults to your Poku reserved number. If you don't have one, falls back to a Poku shared number.\n\nYou can also bring your own number from Twilio or Messagebird. Configure your credentials on the [Integrations page](https://dashboard.pokulabs.com/integrations) and pass the number here in E.164 format."
           },
           "transfer_to": {
             "type": "string",
@@ -1763,7 +1309,7 @@
           },
           "language": {
             "type": "string",
-            "description": "Specifies the language (and dialect) for speech recognition. For example, `en-GB` optimizes recognition for British English. Defaults to `en-US` if unset.\n\n**Available options:** `en-US`, `en-IN`, `en-GB`, `en-AU`, `en-NZ`, `de-DE`, `es-ES`, `es-419`, `hi-IN`, `fr-FR`, `fr-CA`, `ja-JP`, `pt-PT`, `pt-BR`, `zh-CN`, `ru-RU`, `it-IT`, `ko-KR`, `nl-NL`, `nl-BE`, `pl-PL`, `tr-TR`, `vi-VN`, `ro-RO`, `bg-BG`, `ca-ES`, `th-TH`, `da-DK`, `fi-FI`, `el-GR`, `hu-HU`, `id-ID`, `no-NO`, `sk-SK`, `sv-SE`, `lt-LT`, `lv-LV`, `cs-CZ`, `ms-MY`, `af-ZA`, `ar-SA`, `az-AZ`, `bs-BA`, `cy-GB`, `fa-IR`, `fil-PH`, `gl-ES`, `he-IL`, `hr-HR`, `hy-AM`, `is-IS`, `kk-KZ`, `kn-IN`, `mk-MK`, `mr-IN`, `ne-NP`, `sl-SI`, `sr-RS`, `sw-KE`, `ta-IN`, `ur-IN`, `yue-CN`, `uk-UA`",
+            "description": "Specifies the language and dialect. For example, `en-GB` optimizes recognition for British English. Defaults to `en-US` if unset.\n\n**Available options:** `en-US`, `en-IN`, `en-GB`, `en-AU`, `en-NZ`, `de-DE`, `es-ES`, `es-419`, `hi-IN`, `fr-FR`, `fr-CA`, `ja-JP`, `pt-PT`, `pt-BR`, `zh-CN`, `ru-RU`, `it-IT`, `ko-KR`, `nl-NL`, `nl-BE`, `pl-PL`, `tr-TR`, `vi-VN`, `ro-RO`, `bg-BG`, `ca-ES`, `th-TH`, `da-DK`, `fi-FI`, `el-GR`, `hu-HU`, `id-ID`, `no-NO`, `sk-SK`, `sv-SE`, `lt-LT`, `lv-LV`, `cs-CZ`, `ms-MY`, `af-ZA`, `ar-SA`, `az-AZ`, `bs-BA`, `cy-GB`, `fa-IR`, `fil-PH`, `gl-ES`, `he-IL`, `hr-HR`, `hy-AM`, `is-IS`, `kk-KZ`, `kn-IN`, `mk-MK`, `mr-IN`, `ne-NP`, `sl-SI`, `sr-RS`, `sw-KE`, `ta-IN`, `ur-IN`, `yue-CN`, `uk-UA`",
             "example": "en-US"
           }
         },
@@ -1777,7 +1323,6 @@
         "properties": {
           "phoneNumber": {
             "type": "string",
-            "pattern": "^\\+[1-9]\\d{1,14}$",
             "description": "The phone number to reserve, in E.164 format. Must be a number returned by [List available numbers](/api-reference/numbers/list-available-numbers)."
           }
         },
@@ -2065,7 +1610,7 @@
         "properties": {
           "message": {
             "type": "string",
-            "description": "The text content of the WhatsApp message."
+            "description": "The content of the WhatsApp message."
           },
           "to": {
             "type": "string",
@@ -2076,14 +1621,14 @@
             "minimum": 1,
             "maximum": 600,
             "default": null,
-            "description": "Duration in seconds that the agent waits for a reply after the message is sent.\n\nWhen null, no reply is captured. When set, Poku listens for a response within that window and returns it in the tool call response."
+            "description": "When undefined or not supplied, no reply is captured.\n\nWhen supplied, this is the number of seconds the API request is held open waiting for a reply. Poku returns the reply in the HTTP response."
           },
           "follow_up_time": {
             "type": "number",
             "minimum": 1,
             "maximum": 60000,
             "default": null,
-            "description": "Duration in seconds to keep listening for a reply after the `wait_time` window closes.\n\nWhen a reply arrives within this window, Poku forwards it to the webhook attached to your account."
+            "description": "Duration in seconds to keep listening for a reply after the `wait_time` window closes.\n\nWhen a reply arrives within this window, Poku sends it to any webhooks you've configured."
           }
         },
         "additionalProperties": false
@@ -2098,8 +1643,31 @@
         ],
         "properties": {
           "template": {
-            "$ref": "#/components/schemas/WhatsappTemplate",
-            "description": "A Meta-approved WhatsApp template. Required when sending from your own number. Configure your Twilio or MessageBird credentials on the [Integrations page](https://dashboard.pokulabs.com/integrations)."
+            "type": "object",
+            "description": "A Meta-approved WhatsApp template. Required when sending from your own number. Configure your Twilio or MessageBird credentials on the [Integrations page](https://dashboard.pokulabs.com/integrations).",
+            "required": [
+              "id",
+              "variables"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The template UUID from your Meta Business account."
+              },
+              "variables": {
+                "type": "object",
+                "description": "Key-value pairs mapping template variable names to their values.",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
+            },
+            "example": {
+              "id": "29536325-17a1-49b3-b6fe-9b3d12b839c6",
+              "variables": {
+                "linkID": "{{reply_token}}"
+              }
+            }
           },
           "to": {
             "type": "string",
@@ -2107,21 +1675,21 @@
           },
           "from": {
             "type": "string",
-            "description": "Your WhatsApp-enabled number in E.164 format. We'll check your Twilio account first, then MessageBird."
+            "description": "Bring your own WhatsApp number from Twilio or Messagebird. Configure your credentials on the [Integrations page](https://dashboard.pokulabs.com/integrations) and pass the number here in E.164 format."
           },
           "wait_time": {
             "type": "number",
             "minimum": 1,
             "maximum": 600,
             "default": null,
-            "description": "Duration in seconds that the agent waits for a reply after the message is sent.\n\nWhen null, no reply is captured. When set, Poku listens for a response within that window and returns it in the tool call response."
+            "description": "When undefined or not supplied, no reply is captured.\n\nWhen supplied, this is the number of seconds the API request is held open waiting for a reply. Poku returns the reply in the HTTP response."
           },
           "follow_up_time": {
             "type": "number",
             "minimum": 1,
             "maximum": 60000,
             "default": null,
-            "description": "Duration in seconds to keep listening for a reply after the `wait_time` window closes.\n\nWhen a reply arrives within this window, Poku forwards it to the webhook attached to your account."
+            "description": "Duration in seconds to keep listening for a reply after the `wait_time` window closes.\n\nWhen a reply arrives within this window, Poku sends it to any webhooks you've configured."
           }
         },
         "additionalProperties": false
@@ -2135,7 +1703,7 @@
         "properties": {
           "message": {
             "type": "string",
-            "description": "The text content of the Slack message."
+            "description": "The content of the Slack message."
           },
           "to": {
             "type": "string",
@@ -2143,21 +1711,21 @@
           },
           "from": {
             "type": "string",
-            "description": "Your Slack workspace or organization ID. When provided, Pokubot sends the message from within your own workspace.\n\nIf left blank, the message is sent from the Poku Slack workspace \u2014 you must [join it first](https://pokulabs.slack.com/join/shared_invite/zt-334pmqhy9-oZN8cMAXLFUdmDCgNZX9rA).\n\n[How to find your workspace ID](https://slack.com/help/articles/221769328-Locate-your-Slack-URL-or-ID#find-your-workspace-or-org-id)"
+            "description": "If left blank, the message is sent from the Poku Slack workspace \u2014 you must [join it first](https://pokulabs.slack.com/join/shared_invite/zt-334pmqhy9-oZN8cMAXLFUdmDCgNZX9rA).\n\nYour Slack workspace ID. When provided, Pokubot sends the message from within your own workspace. [How to find your workspace ID](https://slack.com/help/articles/221769328-Locate-your-Slack-URL-or-ID#find-your-workspace-or-org-id)"
           },
           "wait_time": {
             "type": "number",
             "minimum": 1,
             "maximum": 600,
             "default": null,
-            "description": "Duration in seconds that the agent waits for a reply after the message is sent.\n\nWhen null, no reply is captured. When set, the recipient can reply directly to the Slack thread and the response will be captured in the tool call response."
+            "description": "When undefined or not supplied, no reply is captured.\n\nWhen supplied, this is the number of seconds the API request is held open waiting for a reply. The recipient MUST reply directly to the Slack thread and the reply will be captured in the HTTP response."
           },
           "follow_up_time": {
             "type": "number",
             "minimum": 1,
             "maximum": 60000,
             "default": null,
-            "description": "Duration in seconds to keep listening for a reply after the `wait_time` window closes.\n\nWhen a reply arrives within this window, Poku forwards it to the webhook attached to your account."
+            "description": "Duration in seconds to keep listening for a reply after the `wait_time` window closes.\n\nWhen a reply arrives within this window, Poku sends it to any webhooks you've configured."
           }
         },
         "additionalProperties": false

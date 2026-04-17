@@ -45,9 +45,7 @@
           {
             "group": "Calls",
             "pages": [
-              "api-reference/calls/place-outbound-call",
-              "api-reference/calls/list-calls",
-              "api-reference/calls/get-call"
+              "api-reference/calls/place-outbound-call"
             ]
           },
           {
@@ -55,9 +53,7 @@
             "pages": [
               "api-reference/messages/send-sms",
               "api-reference/messages/send-whatsapp",
-              "api-reference/messages/send-slack",
-              "api-reference/messages/list-messages",
-              "api-reference/messages/get-messages"
+              "api-reference/messages/send-slack"
             ]
           },
           {
