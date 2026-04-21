@@ -69,38 +69,36 @@ Set up your agent to accept incoming POST requests at your chosen path. Poku sen
 
 ```json
 {
-  "user_id": "usr_abc123",
-  "event_type": "phone.sms.received",
+  "eventType": "phone.sms.received",
   "payload": {
-    "reserved_number": "+14155550100",
-    "from": "+14155550199",
-    "to": "+14155550100",
-    "body": "Hey, are you available tomorrow?",
-    "media_urls": [],
-    "received_at": "2024-01-15T10:30:00Z"
+    "reservedNumber": "+14157046427",
+    "from": "+12158133149",
+    "to": "+14157046427",
+    "body": "Hello!",
+    "mediaUrls": [],
+    "receivedAt": "2026-04-17T12:00:00.000Z"
   }
 }
 ```
 
 | Field | Description |
 |-------|-------------|
-| `payload.reserved_number` | Your Poku number that received the message |
+| `payload.reservedNumber` | Your Poku number that received the message |
 | `payload.from` | Phone number that sent the message |
 | `payload.to` | Phone number that received the message |
 | `payload.body` | Text content of the message |
-| `payload.media_urls` | Array of media URLs if the message included attachments (MMS) |
-| `payload.received_at` | ISO 8601 timestamp of when the message was received |
+| `payload.mediaUrls` | Array of media URLs if the message included attachments (MMS) |
+| `payload.receivedAt` | ISO 8601 timestamp of when the message was received |
 
 ### Call event (`phone.call.received`)
 
 ```json
 {
-  "user_id": "usr_abc123",
-  "event_type": "phone.call.received",
+  "eventType": "phone.call.received",
   "payload": {
-    "summary": "Caller asked about appointment availability for next week.",
-    "from": "+14155550199",
-    "to": "+14155550100"
+    "summary": "Caller confirmed their appointment for tomorrow at 3pm.",
+    "from": "+12158133149",
+    "to": "+14157046427"
   }
 }
 ```
