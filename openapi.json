@@ -1942,7 +1942,7 @@
         "properties": {
           "message": {
             "type": "string",
-            "description": "The content of your message.\n\nWhen `waitTime` or `followUpTime` is not set:\n*\"Notification from AI agent: {{message}}. No response required.\"*\n\nWhen `waitTime` or `followUpTime` is set:\n*\"Your AI agent is requesting your input. Message from agent: {{message}}. Please review and reply with your guidance. If no response is received within {{waitTime}} seconds, the request will be automatically closed.\"*"
+            "description": "The content of your message.\n\nWhen `waitTime` is not set:\n*\"Notification from AI agent: {{message}}. No response required.\"*\n\nWhen `waitTime` is set:\n*\"Your AI agent is requesting your input. Message from agent: {{message}}. Please review and reply with your guidance. If no response is received within {{waitTime}} seconds, the request will be automatically closed.\"*"
           },
           "to": {
             "type": "string",
