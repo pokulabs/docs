@@ -1639,6 +1639,15 @@
             "type": "string",
             "description": "Specifies the language and dialect. For example, `en-GB` optimizes recognition for British English. Defaults to `en-US` if unset.\n\n**Available options:** `en-US`, `en-IN`, `en-GB`, `en-AU`, `en-NZ`, `de-DE`, `es-ES`, `es-419`, `hi-IN`, `fr-FR`, `fr-CA`, `ja-JP`, `pt-PT`, `pt-BR`, `zh-CN`, `ru-RU`, `it-IT`, `ko-KR`, `nl-NL`, `nl-BE`, `pl-PL`, `tr-TR`, `vi-VN`, `ro-RO`, `bg-BG`, `ca-ES`, `th-TH`, `da-DK`, `fi-FI`, `el-GR`, `hu-HU`, `id-ID`, `no-NO`, `sk-SK`, `sv-SE`, `lt-LT`, `lv-LV`, `cs-CZ`, `ms-MY`, `af-ZA`, `ar-SA`, `az-AZ`, `bs-BA`, `cy-GB`, `fa-IR`, `fil-PH`, `gl-ES`, `he-IL`, `hr-HR`, `hy-AM`, `is-IS`, `kk-KZ`, `kn-IN`, `mk-MK`, `mr-IN`, `ne-NP`, `sl-SI`, `sr-RS`, `sw-KE`, `ta-IN`, `ur-IN`, `yue-CN`, `uk-UA`",
             "example": "en-US"
+          },
+          "voice": {
+            "type": "string",
+            "description": "Selects the voice used for the call. Defaults to `female` if unset.",
+            "enum": [
+              "male",
+              "female"
+            ],
+            "default": "female"
           }
         },
         "additionalProperties": false
