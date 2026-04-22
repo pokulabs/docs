@@ -1364,7 +1364,7 @@
           "message": {
             "type": "string",
             "default": "Please fill out this form: {{url}}",
-            "description": "The SMS body sent to the recipient. `{{url}}` inserts the full form link. `{{replyToken}}` inserts only the form ID.\n\n**Example URL:** `https://dashboard.pokulabs.com/reply/EniUSmrc_5hisuSf`\n\n**Example reply token:** `EniUSmrc_5hisuSf`"
+            "description": "The SMS body sent to the recipient. `{{url}}` inserts the full form link. `{{replyToken}}` inserts only the form ID.\n\n**Example `url`:** `https://dashboard.pokulabs.com/reply/EniUSmrc_5hisuSf`\n\n**Example `replyToken`:** `EniUSmrc_5hisuSf`"
           },
           "title": {
             "type": "string",
