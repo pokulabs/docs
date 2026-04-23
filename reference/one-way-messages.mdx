@@ -1,0 +1,61 @@
+---
+title: "Send a One-Way Message"
+description: "Send a notification or update via SMS, WhatsApp, or Slack."
+---
+
+---
+
+## SMS
+
+By default, messages are sent from a shared Poku number. You can [reserve your own dedicated number](/reference/reserved-phone-numbers) or [bring your own Twilio number](/integrations/twilio). See [supported countries](/reference/supported-countries) for SMS availability.
+
+```bash
+curl -X POST https://api.pokulabs.com/messages/sms \
+  -H "Authorization: Bearer <your-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "Your appointment is confirmed for tomorrow at 2pm.",
+    "to": "+12155551234"
+  }'
+```
+
+See the full [Send SMS](/api-reference/messages/send-sms) API reference.
+
+---
+
+## WhatsApp
+
+By default, messages are sent from the Poku WhatsApp account and wrapped in a fixed template: *"Notification from AI agent: \{\{message\}\}. No response required."* To use your own WhatsApp number, you need a Meta-approved template.
+
+```bash
+curl -X POST https://api.pokulabs.com/messages/whatsapp \
+  -H "Authorization: Bearer <your-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "Your appointment is confirmed for tomorrow at 2pm.",
+    "to": "+12155551234"
+  }'
+```
+
+> *"Notification from AI agent: Your appointment is confirmed for tomorrow at 2 pm. No response required."*
+
+See the full [Send WhatsApp](/api-reference/messages/send-whatsapp) API reference.
+
+---
+
+## Slack
+
+**Prerequisite:** The recipient must [join the Poku Slack workspace](https://pokulabs.slack.com/join/shared_invite/zt-334pmqhy9-oZN8cMAXLFUdmDCgNZX9rA) to receive messages. To send from your own workspace, [install the Pokubot](https://slack.com/oauth/v2/authorize?client_id=8696401389877.9342964367269&scope=channels:history,channels:join,chat:write,chat:write.public,groups:history,im:history,im:write,mpim:write,users:read,mpim:history&user_scope=) and pass your workspace ID as `from`.
+
+```bash
+curl -X POST https://api.pokulabs.com/messages/slack \
+  -H "Authorization: Bearer <your-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "Your appointment is confirmed for tomorrow at 2pm.",
+    "to": "<slack-member-or-channel-id>",
+    "from": "<your-workspace-id>"
+  }'
+```
+
+See the full [Send Slack](/api-reference/messages/send-slack) API reference.

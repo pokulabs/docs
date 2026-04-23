@@ -14,27 +14,78 @@
         "tab": "Documentation",
         "groups": [
           {
-            "group": "Setup",
+            "group": "Get Started",
             "pages": [
               "index",
+              "quickstart/for-devs"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
               {
-                "group": "Poku Skill",
+                "group": "For Voice AI Agent Builders",
                 "pages": [
-                  "poku-skill/installation",
-                  "poku-skill/openclaw"
+                  "reference/voice-ai-overview",
+                  "reference/voice-ai-setup"
                 ]
               },
-              "poku-skill/webhook"
+              {
+                "group": "For OpenClaw Users",
+                "pages": [
+                  "poku-skill/openclaw",
+                  "reference/calls",
+                  "reference/sms"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Concepts",
+            "pages": [
+              "reference/reserved-phone-numbers",
+              {
+                "group": "Outbound Calls",
+                "pages": [
+                  "reference/outbound-calls",
+                  "reference/transfer-call"
+                ]
+              },
+              {
+                "group": "Messages",
+                "pages": [
+                  "reference/messages-overview",
+                  "reference/one-way-messages",
+                  "reference/two-way-messages"
+                ]
+              },
+              "reference/forms",
+              "poku-skill/webhook",
+              "reference/voice-ai-channel-cards",
+              "reference/voice-ai-follow-up-time"
             ]
           },
           {
             "group": "Reference",
             "pages": [
-              "reference/calls",
-              "reference/sms",
-              "reference/reserved-phone-numbers",
-              "reference/transfer-call",
-              "reference/supported-countries"
+              {
+                "group": "Supported Countries",
+                "pages": [
+                  "reference/supported-countries-calls",
+                  "reference/supported-countries-sms"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              "poku-skill/installation",
+              "integrations/twilio",
+              "integrations/bird",
+              "integrations/retell",
+              "reference/voice-ai-context-injection",
+              "integrations/openclaw"
             ]
           }
         ]

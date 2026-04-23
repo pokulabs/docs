@@ -1,0 +1,85 @@
+---
+title: "Follow Up Time"
+description: "Keep listening for a reply after the waitTime window closes."
+---
+
+`waitTime` holds the HTTP request open waiting for a reply. `followUpTime` extends that window — but instead of holding the request open, it delivers late replies to your webhook.
+
+The two parameters can work together, or you can use just one:
+
+| Parameter | What it does | Where the reply goes |
+|---|---|---|
+| `waitTime` | Holds the request open for N seconds | HTTP response |
+| `followUpTime` | Keeps listening for N seconds after `waitTime` closes | Your webhook |
+
+---
+
+## How it works
+
+<Steps>
+  <Step title="Message is sent">
+    Poku sends the message to the recipient.
+  </Step>
+  <Step title="waitTime window opens">
+    The HTTP request stays open. If the recipient replies, it's returned immediately in the response and your agent continues with the received context.
+  </Step>
+  <Step title="waitTime expires">
+    If no reply came in, your agent receives the no-response message and moves on.
+  </Step>
+  <Step title="followUpTime window opens">
+    Poku continues listening in the background. If a reply arrives, it's delivered to your webhook.
+  </Step>
+  <Step title="followUpTime expires">
+    The channel closes. Any reply after this point is not captured.
+  </Step>
+</Steps>
+
+---
+
+## Use case: manager replies after the call moves on
+
+Your agent texts a manager mid-call asking about a customer's car repair. The manager doesn't reply in time, so the agent tells the customer no one is available. Ten minutes later, the manager replies — and `followUpTime` is still open.
+
+Your webhook receives the reply, and you can:
+- Text or email the customer with the manager's response
+- Trigger a follow-up call to the customer
+- Log the response for your team
+
+**Example message to manager:**
+```
+Customer John is asking about the status of his black Toyota Camry 2016. When is it ready for pick-up?
+```
+
+**Request body:**
+```json
+{
+  "message": "Customer John is asking about the status of his black Toyota Camry 2016. When is it ready for pick-up?",
+  "to": "+12155550100",
+  "waitTime": 30,
+  "followUpTime": 3600
+}
+```
+
+The agent gets a response within 30 seconds if the manager is available. If not, Poku keeps listening for up to an hour. When the manager replies, your webhook receives their message.
+
+---
+
+## Webhook payload
+
+When a reply arrives within `followUpTime`, Poku sends a POST to your webhook:
+
+```typescript
+"interaction.response.received": {
+  interactionId: "092f9eb4-3694-4718-9084-5c786afa87ec";
+  message: "Toyota Camry 2016 will be ready for pick-up on Thursday.";
+  metadata: { "customerId": "cust_123" };
+  isWithinWaitTime: false;
+  isWithinValidTime: true;
+}
+```
+
+You can use a workflow tool like [n8n](https://n8n.io) or [Make](https://make.com) to act on this payload automatically — for example, sending the customer a follow-up text:
+
+> *"Hi John, the manager just got back to us — your Toyota Camry 2016 will be ready for pick-up on Thursday."*
+
+See the [Webhook](/poku-skill/webhook) page for setup instructions.

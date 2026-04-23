@@ -1,0 +1,100 @@
+---
+title: "Retell AI"
+icon: "/images/retell-light.svg"
+iconDark: "/images/retell-dark.svg"
+description: "Connect Poku's tools to your Retell AI voice agent."
+---
+
+Poku Labs is a proud [Retell AI App Partner](https://www.retellai.com/app-partner/poku-labs). You can add Poku's API as a custom function in any Retell agent — giving your voice AI the ability to text customers, capture structured data, loop in a manager, and more.
+
+---
+
+## Use cases
+
+<CardGroup cols={2}>
+  <Card title="Email capture over SMS" icon="envelope">
+    Agent sends a text mid-call. Customer replies with their email. Agent reads it back and continues.
+  </Card>
+  <Card title="Form capture via WhatsApp" icon="wpforms">
+    Agent sends a form link over WhatsApp. Customer fills it out on their phone while still on the call.
+  </Card>
+  <Card title="Loop in a manager" icon="phone-arrow-right">
+    Agent texts a manager to check transfer availability before handing off — no dead air for the customer.
+  </Card>
+  <Card title="Quote approval via Slack" icon="slack">
+    Agent pings a Slack channel for sign-off on a custom price, then relays the answer to the customer.
+  </Card>
+</CardGroup>
+
+---
+
+## See it in action
+
+<iframe
+  width="100%"
+  style={{ aspectRatio: "16/9" }}
+  src="https://www.youtube.com/embed/uoC3ehUe1C4"
+  title="Poku + Retell AI"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+/>
+
+---
+
+## Setup on Retell AI
+
+<Steps>
+  <Step title="Add a custom function">
+    In your Retell agent, navigate to **Functions** and add a new custom function.
+
+    <Frame>
+      <img src="/images/Retell-1.png" alt="Adding a custom function in Retell AI" />
+    </Frame>
+  </Step>
+  <Step title="Name and describe the function">
+    The name and description can be anything — write them so your agent understands when to use the tool. For example: `send_sms`, *"Send an SMS to the customer and wait for their reply."*
+  </Step>
+  <Step title="Set the API endpoint">
+    Select **POST** and enter the Poku API URL for the action you want:
+
+    | Action | URL |
+    |---|---|
+    | Send SMS | `https://api.pokulabs.com/messages/sms` |
+    | Send WhatsApp | `https://api.pokulabs.com/messages/whatsapp` |
+    | Send Slack message | `https://api.pokulabs.com/messages/slack` |
+  </Step>
+  <Step title="Set the timeout">
+    Set the function timeout to be **equal to or longer than the `waitTime` you plan to pass to Poku**.
+  </Step>
+  <Step title="Add the authorization header">
+    Under **Headers**, add:
+
+    | Key | Value |
+    |---|---|
+    | `Authorization` | `Bearer <your-poku-api-key>` |
+  </Step>
+  <Step title="Define the parameters">
+    Under **Form**, add the parameters your agent will pass in the request body — for example `to`, `message`, and `waitTime`. These map directly to the [Poku API fields](/api-reference/messages/send-sms).
+
+    <Frame>
+      <img src="/images/Retell-2.png" alt="Configuring parameters in Retell AI" />
+    </Frame>
+  </Step>
+  <Step title="Configure execution feedback">
+    Under **During Execution**:
+    - **Talk After Action Completed** — always enable this so your agent speaks after receiving the tool response
+    - **Talk While Waiting** — enable this if you want the agent to keep talking with the customer while waiting for the Poku response (e.g., to fill dead air)
+  </Step>
+  <Step title="Update your agent prompt">
+    Update your agent's system prompt to reference the new tool by name so it knows when and how to call it.
+  </Step>
+</Steps>
+
+---
+
+## Tips
+
+**Prevent the agent from moving on before the tool call resolves**
+
+If you don't want the agent to continue the conversation before receiving the Poku response, use a **multi-conversation flow** rather than a single prompt. This ensures the agent waits for the tool result before proceeding.

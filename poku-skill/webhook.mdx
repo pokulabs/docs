@@ -111,40 +111,7 @@ Set up your agent to accept incoming POST requests at your chosen path. Poku sen
 | `payload.from` | Phone number that placed the call |
 | `payload.to` | Your Poku number that received the call |
 
-**Example: OpenClaw config**
-
-Add a Poku mapping to the `hooks` section of `~/.openclaw/openclaw.json`. For full details, see the [OpenClaw webhook documentation](https://docs.openclaw.ai/automation/webhook).
-
-```json
-{
-  "hooks": {
-    "enabled": true,
-    "token": "<openclaw-hooks-token>",
-    "transformsDir": "~/.openclaw/hooks/transforms",
-    "defaultSessionKey": "hook:ingress",
-    "allowRequestSessionKey": false,
-    "allowedSessionKeyPrefixes": [
-      "hook:"
-    ],
-    "mappings": [
-      {
-        "match": {
-          "path": "poku"
-        },
-        "action": "agent",
-        "agentId": "main",
-        "sessionKey": "hook:poku",
-        "wakeMode": "now",
-        "name": "Poku",
-        "deliver": true,
-        "channel": "telegram",
-        "to": "<your-telegram-id>",
-        "messageTemplate": "You received a message from {{payload.payload.from}}: \"{{payload.payload.body}}{{payload.payload.summary}}\""
-      }
-    ]
-  }
-}
-```
+Using OpenClaw? See the [OpenClaw installation guide](/poku-skill/openclaw) for the `openclaw.json` webhook config.
 
 ---
 
