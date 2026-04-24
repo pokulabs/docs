@@ -1763,8 +1763,9 @@
       "WebhookEventType": {
         "type": "string",
         "enum": [
-          "phone.sms.received",
-          "phone.call.received"
+          "message.received",
+          "form.received",
+          "call.conversation.ended"
         ]
       },
       "CreateReservedNumberWebhookRequest": {

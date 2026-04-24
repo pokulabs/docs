@@ -3,13 +3,13 @@ title: "Forms"
 description: "Build a form and send it via SMS, WhatsApp, or Slack. Responses are returned in the HTTP response or delivered to your webhook."
 ---
 
-Poku forms let your AI agent collect structured data from a recipient mid-conversation or mid-task. The agent sends a unique Poku form link, the recipient fills out the form, and the response comes back to the agent — no separate form builder, webhook, or database required.
+Poku forms let your AI agent collect structured data from a recipient mid-conversation or mid-task. The agent sends a unique Poku form link, the recipient fills out the form, and the response comes back to the agent via HTTP response or to your webhook.
 
 ---
 
 ## How it works
 
-1. Your agent sends a form via SMS, WhatsApp, or Slack
+1. Your agent sends a form 
 2. The recipient receives a link and opens the form in their browser
 3. They fill out the fields and submit
 4. The content is returned in the HTTP response if the form was filled out within the `waitTime` window. Otherwise, the form response can be delivered to your webhook within the `followUpTime` window.
@@ -151,7 +151,7 @@ Add custom regex rules to `text`, `textarea`, `email`, and `phoneNumber` fields.
 | `waitTime` | 90s | Holds the HTTP request open. Shown as a countdown on the form. |
 | `followUpTime` | 90s | Keeps the form open after `waitTime`. Submission delivered to your webhook. Once expired, the form shows *"This form has expired."* |
 
-Both `waitTime` and `followUpTime` must be supplied — at least one is required.
+At least one field between `waitTime` or `followUpTime` must be supplied.
 
 ---
 
@@ -186,4 +186,4 @@ When no submission is received within `waitTime`:
 | **API endpoint** | [POST /forms/sms](/api-reference/forms/send-form-sms) | [POST /forms/whatsapp](/api-reference/forms/send-form-whatsapp) | [POST /forms/slack](/api-reference/forms/send-form-slack) |
 | **Form delivery** | Link sent via SMS | Fixed Poku template with form button | Link sent via Slack message |
 | **Recipient requirement** | Phone number in [supported country](/reference/supported-countries) | WhatsApp account | Member of Poku workspace or own workspace via Pokubot |
-| **Customizable message** | Yes — defaults to `"Please fill out this form: {{url}}"` | No — message is fixed | Yes |
+| **Customizable message** | Yes — defaults to `"Please fill out this form: {{url}}"` | No — message is fixed | Yes — defaults to `"Please fill out this form: {{url}}"` |

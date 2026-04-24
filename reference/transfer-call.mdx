@@ -3,13 +3,11 @@ title: "Transfer Number"
 description: "Hand off a live call to a human."
 ---
 
-During an outbound call, the voice agent will transfer to your transfer number only if the person on the line explicitly asks to speak with a human. This gives the other party a way to reach you directly if needed — for example, if they have a question the agent can't answer or want to confirm details personally.
-
-The transfer is not triggered automatically. If the caller does not request it, the agent completes the call as normal.
+During an outbound call, the voice agent will transfer to your transfer number if (1) the person on the line explicitly asks to speak with a human or (2) if you specify any transfer conditions in the prompt. This gives the other party a way to reach you directly if needed — for example, if they have a question the agent can't answer or want to confirm details personally.
 
 ---
 
-## Via the API
+## Option 1: Via the API
 
 Pass `transferTo` in your call request:
 
@@ -30,11 +28,11 @@ curl -X POST https://api.pokulabs.com/calls \
 | `to` | string | Yes | Destination phone number in E.164 format. |
 | `transferTo` | string | No | Number to transfer the call to if the other party asks to speak with a human. Must be E.164 format. |
 
-See [Supported Countries](/reference/supported-countries) for eligible destinations.
+See [Supported Countries](/reference/supported-countries-calls) for eligible destinations.
 
 ---
 
-## Via the Poku Skill
+## Option 2: Via the Poku Skill
 
 Set `POKU_TRANSFER_NUMBER` in your Poku Skill environment config to apply a permanent `transferTo` across all calls placed by the skill — no need to pass it on each request.
 

@@ -20,7 +20,7 @@ Pass a `waitTime` parameter which tells Poku how long to hold the HTTP request o
     If the recipient replies within the window, the reply is returned in the HTTP response. If no reply is received, Poku returns a timeout message and your agent continues.
   </Step>
   <Step title="followUpTime keeps the channel open">
-    After `waitTime` closes, `followUpTime` continues listening for late replies and delivers them to your configured webhook. (Link to followUptime concept)
+    After `waitTime` closes, `followUpTime` continues listening for late replies and delivers them to your configured webhook. Read more about [Follow Up Time](/reference/voice-ai-follow-up-time).
   </Step>
 </Steps>
 
@@ -68,5 +68,5 @@ curl -X POST https://api.pokulabs.com/messages/sms \
 | | SMS | WhatsApp | Slack |
 |---|---|---|---|
 | **Reply method** | Standard text reply | Standard WhatsApp reply | Must reply directly in the Slack thread |
-| **Template when `waitTime` is set** | Free-form | *"Your AI agent is requesting your input. Message from agent: \{\{message\}\}..."* | Free-form |
-| **Requirement** | Using your own number requires messaging approval (e.g., A2P10DLC) | Poku WhatsApp or own number with Meta template | Recipient must be in the Poku workspace or install Pokubot to their workspace |
+| **Template when `waitTime` is set** | Free-form | *"Your AI agent is requesting your input. Message from agent: \{\{message\}\}. Please review and reply with your guidance. If no response is received within \{\{waitTime\}\} seconds, the request will be automatically closed."* | Free-form |
+| **Requirement** | Using your own number requires messaging approval (e.g., A2P10DLC) | Poku WhatsApp or own number with Meta template | Recipient must [join the Poku workspace](https://pokulabs.slack.com/join/shared_invite/zt-334pmqhy9-oZN8cMAXLFUdmDCgNZX9rA#/shared-invite/email) or [install Pokubot](https://slack.com/oauth/v2/authorize?client_id=8696401389877.9342964367269&scope=channels:history,channels:join,chat:write,chat:write.public,groups:history,im:history,im:write,mpim:write,users:read,mpim:history&user_scope=) into their own workspace |
