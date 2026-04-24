@@ -1,0 +1,21 @@
+---
+title: "Messages Overview"
+description: "Send messages across SMS, WhatsApp, and Slack from any AI agent."
+---
+
+Poku supports two messaging modes:
+
+- **One-way** — send a notification or update
+- **Two-way** — send a message and wait for a reply, captured directly in the HTTP response or asynchronously via [webhook](/poku-skill/webhook)
+
+---
+
+## Channel comparison
+
+| | SMS | WhatsApp | Slack |
+|---|---|---|---|
+| **Message format** | Free-form text | Poku template (fixed) or your own Meta-approved template | Free-form text |
+| **From** | Poku number or your own number via Twilio | Poku WhatsApp or your own WhatsApp number via Twilio / Bird | Poku workspace or your own |
+| **Country coverage** | Limited — [see supported countries](/reference/supported-countries) | Global | Global |
+| **Additional setup** | Your own Twilio numbers must be approved for texting | Your own WhatsApp number requires Meta template approval | [Join Poku workspace](https://pokulabs.slack.com/join/shared_invite/zt-334pmqhy9-oZN8cMAXLFUdmDCgNZX9rA#/shared-invite/email) OR [install Pokubot into your own workspace](https://slack.com/oauth/v2/authorize?client_id=8696401389877.9342964367269&scope=channels:history,channels:join,chat:write,chat:write.public,groups:history,im:history,im:write,mpim:write,users:read,mpim:history&user_scope=) |
+

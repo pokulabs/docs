@@ -1,0 +1,70 @@
+---
+title: "Outbound Calls"
+description: "Two ways to place an outbound call with Poku."
+---
+
+## Option 1: Call the API directly
+
+The simplest way to place a call — send a POST request to the outbound call endpoint with a prompt and a phone number.
+
+**Default settings:**
+- Language: English (`en-US`)
+- Voice: Female
+
+```bash
+curl -X POST https://api.pokulabs.com/calls \
+  -H "Authorization: Bearer <your-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "You are a friendly voice assistant calling on behalf of Sarah to confirm a dentist appointment tomorrow at 2pm under the name Sarah Johnson.",
+    "to": "+12155551234"
+  }'
+```
+
+### Customizing voice and language
+
+Pass the `language` parameter to optimize speech recognition for a specific dialect. For example, `en-GB` for British English. See the full list of [supported languages](/api-reference/calls/place-outbound-call).
+
+```json
+{
+  "prompt": "...",
+  "to": "+12155551234",
+  "language": "en-GB"
+}
+```
+
+---
+
+### Prompting best practices
+
+The `prompt` is the only context the outbound agent has — write it as if briefing someone making the call on your behalf.
+
+**Include:**
+- Who they are calling as ("calling on behalf of...")
+- The specific goal with enough detail to handle likely responses
+- Branching logic for common outcomes (available, unavailable, no answer)
+- A voicemail script if no one picks up
+
+**Example:**
+```
+You are a friendly voice assistant calling on behalf of Joe to make a dinner reservation.
+
+Make a reservation for 2 people on Friday at 7pm, under the name Joe Smith.
+- If 7pm is available, confirm and ask if a note is needed for a special occasion.
+- If 7pm is unavailable, ask what times are open and accept an alternative within one hour. Confirm the new time before ending the call.
+- If no one answers, leave this voicemail: "Hi, this is a message on behalf of Joe — I'm hoping to make a dinner reservation for 2 on Friday at 7pm. Thank you."
+```
+
+---
+
+## Option 2: Use the Poku Skill 
+
+If you are using an agent such as Claude Code, OpenClaw, or Hermes, install the Poku skill. The Poku Skill will guide your agent to understand your objective, write the call prompt, and place the call automatically — no need to draft the prompt yourself.
+
+See [Installation](/poku-skill/installation) to get started.
+
+---
+
+<Info>
+  **Coming soon:** Connect your agent brain to a call.
+</Info>

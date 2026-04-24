@@ -1,0 +1,62 @@
+---
+title: "Twilio"
+icon: "/images/twilio.svg"
+description: "Use your own Twilio numbers with Poku for calls, SMS, and WhatsApp."
+---
+
+Connecting Twilio lets your agent send and call from your own numbers instead of a shared Poku number — giving you full control over caller ID, message deliverability, and brand identity.
+
+---
+
+## Connect your Twilio account
+
+<Steps>
+  <Step title="Open the Integrations page">
+    Go to [dashboard.pokulabs.com/integrations](https://dashboard.pokulabs.com/integrations).
+  </Step>
+  <Step title="Enter your Twilio credentials">
+    Paste in your **Account SID** and **Auth Token**. Both are available on the home page of your [Twilio Console](https://console.twilio.com).
+  </Step>
+  <Step title="Save">
+    Click **Save**. Your Twilio numbers are now available to use with Poku.
+  </Step>
+</Steps>
+
+---
+
+## Use your Twilio number
+
+Pass your Twilio number as `from` in any call, SMS, or WhatsApp request:
+
+```bash
+curl -X POST https://api.pokulabs.com/calls \
+  -H "Authorization: Bearer <your-poku-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "You are a friendly assistant calling to confirm an appointment.",
+    "to": "+12155551234",
+    "from": "+19165550100"
+  }'
+```
+
+The same `from` field works across the calls, SMS, and WhatsApp endpoints.
+
+---
+
+## Requirements by channel
+
+| Channel | Requirement |
+|---|---|
+| **Calls** | Any active Twilio number |
+| **SMS** | A2P 10DLC registered number (required for US messaging) |
+| **WhatsApp** | Meta Business-approved messaging template |
+
+SMS to US numbers requires your Twilio number to be registered for A2P 10DLC. WhatsApp requires a Meta-approved template tied to your number. Both are configured in the Twilio Console.
+
+---
+
+## Poku Inbox
+
+<Card title="Poku Inbox" icon="inbox" href="https://inbox.pokulabs.com">
+  Poku Inbox is a separate product that lets you manage inbound and outbound SMS and send bulk messages — powered by your Twilio credentials. Visit inbox.pokulabs.com to get started.
+</Card>

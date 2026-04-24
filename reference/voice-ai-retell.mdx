@@ -1,0 +1,67 @@
+---
+title: "Retell AI"
+description: "Add Poku as a custom function in Retell AI."
+---
+
+<Note>
+  This guide assumes you have an existing Retell AI agent. You'll need your Poku API key from the [dashboard](https://dashboard.pokulabs.com).
+</Note>
+
+## Add a custom function in Retell
+
+1. Open your agent in the Retell dashboard
+2. Navigate to **Functions** → **Add Function**
+3. Set the following:
+
+| Field | Value |
+|---|---|
+| **Function name** | `send_sms` *(or your preferred name)* |
+| **Description** | `Send an SMS to a phone number and optionally wait for a reply` |
+| **Method** | `POST` |
+| **URL** | `https://api.pokulabs.com/messages/sms` |
+
+4. Under **Headers**, add:
+```
+Authorization: Bearer <your-poku-api-key>
+Content-Type: application/json
+```
+
+5. Define the following **parameters:**
+
+```json
+{
+  "message": {
+    "type": "string",
+    "description": "The message to send"
+  },
+  "to": {
+    "type": "string",
+    "description": "The recipient's phone number in E.164 format"
+  },
+  "waitTime": {
+    "type": "number",
+    "description": "Seconds to hold the request open waiting for a reply"
+  }
+}
+```
+
+6. Save and add the function to your agent's tool list
+
+---
+
+## Example: Email capture during a call
+
+**Agent prompt addition:**
+```
+When you need the customer's email address, call send_sms with:
+- message: "Hi, can you reply with your email address so I can send your confirmation?"
+- to: <customer phone number>
+- waitTime: 60
+
+Wait for the response before continuing the conversation.
+```
+
+**What the agent receives back:**
+```json
+{ "response": "Human response: johnsmith@gmail.com" }
+```

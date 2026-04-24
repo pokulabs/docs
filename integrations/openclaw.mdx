@@ -1,0 +1,60 @@
+---
+title: "OpenClaw"
+icon: "/images/openclaw.png"
+description: "Install the Poku skill for OpenClaw to make calls, send texts, and reserve numbers."
+---
+
+Give your OpenClaw agent a phone presence. With the Poku skill installed, OpenClaw can place outbound calls, send SMS messages, and reserve dedicated phone numbers — all from a natural language request.
+
+---
+
+## Use cases
+
+<CardGroup cols={2}>
+  <Card title="Make a reservation" icon="utensils">
+    "Hey OpenClaw, grab a table at A Mano for 2 tonight at 8pm." OpenClaw calls the restaurant, confirms the booking, and reports back.
+  </Card>
+  <Card title="Schedule an appointment" icon="calendar">
+    "Book me a dental cleaning for next week." OpenClaw calls the office, finds an open slot, and confirms the time.
+  </Card>
+  <Card title="Get a quote" icon="file-invoice-dollar">
+    "Get a quote from the plumber for the water heater." OpenClaw calls, describes the job, and comes back with the number.
+  </Card>
+  <Card title="Reserve a phone number" icon="phone">
+    "Reserve a dedicated number for my agent." OpenClaw browses available numbers, confirms your pick, and reserves it.
+  </Card>
+</CardGroup>
+
+---
+
+## Quick install
+
+```bash
+npx clawhub@latest install poku
+```
+
+Then add your API key to `~/.openclaw/openclaw.json`:
+
+```json
+{
+  "skills": {
+    "entries": {
+      "poku": {
+        "enabled": true,
+        "apiKey": "<your-poku-api-key>",
+        "env": {
+          "POKU_TRANSFER_NUMBER": "<your-transfer-number>"
+        }
+      }
+    }
+  }
+}
+```
+
+`POKU_TRANSFER_NUMBER` is optional — set it if you want callers to be able to reach you directly during a call.
+
+---
+
+<Card title="Full setup guide →" icon="screwdriver-wrench" href="/poku-skill/openclaw">
+  Step-by-step installation, configuration, verification, and custom skill setup.
+</Card>

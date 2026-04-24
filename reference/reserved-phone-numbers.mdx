@@ -1,5 +1,5 @@
 ---
-title: "Reserved Phone Numbers"
+title: "Phone Numbers"
 description: "Your agent can reserve a phone number to make calls and send text messages."
 ---
 
@@ -19,11 +19,11 @@ There are two ways to reserve a number: via the Poku dashboard, or programmatica
   <Step title="Log in to the Poku dashboard">
     Go to [dashboard.pokulabs.com](https://dashboard.pokulabs.com).
   </Step>
-  <Step title="Open the Phones tab">
-    Navigate to the **Phones** tab in the sidebar.
+  <Step title="Open the Numbers tab">
+    Navigate to the **Numbers** tab in the sidebar.
   </Step>
   <Step title="Purchase a number">
-    Browse available numbers, find one you like, and hit **Purchase**.
+    Browse available numbers, find one you like, and hit **Reserve**.
   </Step>
 </Steps>
 
@@ -37,18 +37,14 @@ You can reserve a number directly via the API, or by asking your agent to do it 
 
 #### Step 1: Browse available numbers
 
-Fetch up to 10 available numbers, optionally filtering by country (`US` or `GB`) and area code:
+Filter by country (`US` or `GB`) and area code, or omit any parameters you don't need:
 
 ```bash
-curl -s -G \
+curl -G https://api.pokulabs.com/numbers/available \
   -H "Authorization: Bearer <your-poku-api-key>" \
   --data-urlencode "country=<US|GB>" \
-  --data-urlencode "areaCode=<area code>" \
-  --data-urlencode "limit=10" \
-  https://api.pokulabs.com/reserved-numbers/available
+  --data-urlencode "areaCode=<area code>"
 ```
-
-Omit any parameters you don't need. If you just want any available number, pass `limit=1` and skip the filters.
 
 An empty response means no numbers match — try broadening your search.
 
@@ -57,11 +53,10 @@ An empty response means no numbers match — try broadening your search.
 Once you've identified the number you want, reserve it with a POST request:
 
 ```bash
-curl -s -X POST \
+curl -X POST https://api.pokulabs.com/numbers/reserve \
   -H "Authorization: Bearer <your-poku-api-key>" \
   -H "Content-Type: application/json" \
-  -d '{"phoneNumber": "<selected number>"}' \
-  https://api.pokulabs.com/reserved-numbers/reserve
+  -d '{"phoneNumber": "<selected number>"}'
 ```
 
 On success, the number is immediately reserved to your account and ready for use.
@@ -81,8 +76,8 @@ The agent will browse available numbers, confirm your selection, and complete th
 You can confirm your reserved number is registered to your Poku account at any time with a GET request:
 
 ```bash
-curl -H 'Authorization: Bearer <your-poku-api-key>' \
-  https://api.pokulabs.com/reserved-numbers
+curl -H "Authorization: Bearer <your-poku-api-key>" \
+  https://api.pokulabs.com/numbers
 ```
 
 A successful response returns your reserved number:
@@ -90,9 +85,10 @@ A successful response returns your reserved number:
 ```json
 [
   {
-    "id": "cab29b2d-...",
-    "phone_number": "+14157046427",
-    "created_at": "2026-03-02T17:21:32.602Z"
+    "id": "cab29b2d-a8be-43a6-82e1-7eb33b9fc844",
+    "phoneNumber": "+14157046427",
+    "createdAt": "2026-03-02T17:21:32.602Z",
+    "updatedAt": "2026-03-02T17:21:32.602Z"
   }
 ]
 ```

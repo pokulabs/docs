@@ -1,0 +1,43 @@
+---
+title: "Bird"
+icon: "/images/bird.svg"
+description: "Use your Bird-connected WhatsApp numbers with Poku to send outbound messages."
+---
+
+Connecting Bird lets your agent send WhatsApp messages from numbers you've already configured in your Bird workspace — no Poku shared number required.
+
+---
+
+## Connect your Bird account
+
+<Steps>
+  <Step title="Open the Integrations page">
+    Go to [dashboard.pokulabs.com/integrations](https://dashboard.pokulabs.com/integrations).
+  </Step>
+  <Step title="Enter your Bird credentials">
+    Paste in your **Workspace ID** and **API Key**.
+
+    - [How to find your Workspace ID](https://docs.bird.com/applications/settings/account/organization-settings/how-to-find-a-workspace-id)
+    - [How to find your API Key](https://docs.bird.com/applications/settings/account/organization-settings/access-keys)
+  </Step>
+  <Step title="Save">
+    Click **Save**. Any WhatsApp numbers connected in your Bird workspace are now available to use with Poku.
+  </Step>
+</Steps>
+
+---
+
+## Send a WhatsApp message from your Bird number
+
+Pass your Bird-connected WhatsApp number as `from` in any WhatsApp request:
+
+```bash
+curl -X POST https://api.pokulabs.com/messages/whatsapp \
+  -H "Authorization: Bearer <your-poku-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "Your appointment is confirmed for tomorrow at 2pm.",
+    "to": "+12155551234",
+    "from": "+19165550100"
+  }'
+```

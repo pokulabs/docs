@@ -1,0 +1,80 @@
+---
+title: "Vapi AI"
+description: "Add Poku as a custom tool in Vapi AI."
+---
+
+<Note>
+  This guide assumes you have an existing Vapi assistant. You'll need your Poku API key from the [dashboard](https://dashboard.pokulabs.com).
+</Note>
+
+## Add a custom tool in Vapi
+
+1. Open your assistant in the Vapi dashboard
+2. Navigate to **Tools** → **Add Tool** → **Custom Function**
+3. Set the following:
+
+| Field | Value |
+|---|---|
+| **Name** | `send_sms` *(or your preferred name)* |
+| **Description** | `Send an SMS to a phone number and optionally wait for a reply` |
+| **Method** | `POST` |
+| **URL** | `https://api.pokulabs.com/messages/sms` |
+
+4. Under **Headers**, add:
+```
+Authorization: Bearer <your-poku-api-key>
+Content-Type: application/json
+```
+
+5. Define the **function schema:**
+
+```json
+{
+  "name": "send_sms",
+  "description": "Send an SMS to a phone number and optionally wait for a reply",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "message": {
+        "type": "string",
+        "description": "The message to send"
+      },
+      "to": {
+        "type": "string",
+        "description": "The recipient's phone number in E.164 format"
+      },
+      "waitTime": {
+        "type": "number",
+        "description": "Seconds to hold the request open waiting for a reply"
+      }
+    },
+    "required": ["message", "to"]
+  }
+}
+```
+
+6. Save and enable the tool on your assistant
+
+---
+
+## Example: Transfer availability check
+
+**Agent prompt addition:**
+```
+Before transferring the call, use send_sms to check if the manager is available:
+- message: "Are you free to take a call right now?"
+- to: <manager phone number>
+- waitTime: 30
+
+If the response is yes, initiate the transfer. If no response is received, inform the 
+customer and offer to schedule a callback instead.
+```
+
+**What the agent receives back:**
+```json
+{ "response": "Human response: Yes, put them through" }
+```
+
+```json
+{ "response": "Human did not respond, please continue where you left off." }
+```

@@ -1,0 +1,72 @@
+---
+title: "Ask and Wait for a Reply"
+description: "Send a message and receive a reply in the HTTP response."
+---
+
+Pass a `waitTime` parameter which tells Poku how long to hold the HTTP request open and wait for a reply. The reply is returned directly in the response so your agent can continue without a webhook.
+
+---
+
+## How it works
+
+<Steps>
+  <Step title="Poku sends the message">
+    The message is delivered to the recipient via SMS, WhatsApp, or Slack.
+  </Step>
+  <Step title="The request stays open">
+    The HTTP request is held open for `waitTime` seconds, listening for a reply.
+  </Step>
+  <Step title="Reply or timeout is returned">
+    If the recipient replies within the window, the reply is returned in the HTTP response. If no reply is received, Poku returns a timeout message and your agent continues.
+  </Step>
+  <Step title="followUpTime keeps the channel open">
+    After `waitTime` closes, `followUpTime` continues listening for late replies and delivers them to your configured webhook. Read more about [Follow Up Time](/reference/voice-ai-follow-up-time).
+  </Step>
+</Steps>
+
+---
+
+## Voice Agent Use cases
+
+**Collect information during a call**
+
+The voice agent texts the customer while on the call, waits for a reply, and reads back the confirmation.
+
+> *Voice Agent: "I've just sent you a text where you can respond with your street address...
+I received your address as 123 Hardtospell St, thanks for texting it in."*
+
+**Share context & check availability before a transfer**
+
+The agent confirms the human is available before initiating a transfer — avoiding dropped handoffs.
+
+> *Voice Agent: "Customer on the line is asking about the status of their car repair, which I don't have the details for. Are you free to take a call right now?"*
+
+---
+
+## Example
+
+```bash
+curl -X POST https://api.pokulabs.com/messages/sms \
+  -H "Authorization: Bearer <your-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "Can you reply with your email address?",
+    "to": "<customer-phone-number>",
+    "waitTime": 60
+  }'
+```
+
+**Reply received:**
+```json
+{ "response": "Human response: johnsmith@gmail.com" }
+```
+
+---
+
+## Channel notes
+
+| | SMS | WhatsApp | Slack |
+|---|---|---|---|
+| **Reply method** | Standard text reply | Standard WhatsApp reply | Must reply directly in the Slack thread |
+| **Template when `waitTime` is set** | Free-form | *"Your AI agent is requesting your input. Message from agent: \{\{message\}\}. Please review and reply with your guidance. If no response is received within \{\{waitTime\}\} seconds, the request will be automatically closed."* | Free-form |
+| **Requirement** | Using your own number requires messaging approval (e.g., A2P10DLC) | Poku WhatsApp or own number with Meta template | Recipient must [join the Poku workspace](https://pokulabs.slack.com/join/shared_invite/zt-334pmqhy9-oZN8cMAXLFUdmDCgNZX9rA#/shared-invite/email) or [install Pokubot](https://slack.com/oauth/v2/authorize?client_id=8696401389877.9342964367269&scope=channels:history,channels:join,chat:write,chat:write.public,groups:history,im:history,im:write,mpim:write,users:read,mpim:history&user_scope=) into their own workspace |

@@ -1,6 +1,12 @@
 ---
-title: "OpenClaw"
+title: "Installation"
 description: "Install and configure the Poku skill for OpenClaw."
+---
+
+<Card title="OpenClaw + Poku overview →" icon="rocket" href="/integrations/openclaw">
+  See what's possible: use cases & examples.
+</Card>
+
 ---
 
 ## Prerequisite
@@ -58,9 +64,46 @@ This downloads the published skill bundle — including reference documents and 
   </Step>
 </Steps>
 
-<Note>
-  Installing the skill enables outbound calls and texts. To receive inbound calls and texts, a webhook setup is required. See the [Webhook](/poku-skill/webhook) page to get started.
-</Note>
+---
+
+## Receiving inbound calls and texts
+
+To receive inbound calls and texts, you need to register a webhook with Poku and configure OpenClaw to forward those events to your agent. See the [Webhook](/poku-skill/webhook) page for full setup instructions.
+
+Once you have a webhook URL, add a Poku mapping to the `hooks` section of `~/.openclaw/openclaw.json`:
+
+```json
+{
+  "hooks": {
+    "enabled": true,
+    "token": "<openclaw-hooks-token>",
+    "transformsDir": "~/.openclaw/hooks/transforms",
+    "defaultSessionKey": "hook:ingress",
+    "allowRequestSessionKey": false,
+    "allowedSessionKeyPrefixes": [
+      "hook:"
+    ],
+    "mappings": [
+      {
+        "match": {
+          "path": "poku"
+        },
+        "action": "agent",
+        "agentId": "main",
+        "sessionKey": "hook:poku",
+        "wakeMode": "now",
+        "name": "Poku",
+        "deliver": true,
+        "channel": "telegram",
+        "to": "<your-telegram-id>",
+        "messageTemplate": "You received a message from {{payload.payload.from}}: \"{{payload.payload.body}}{{payload.payload.summary}}\""
+      }
+    ]
+  }
+}
+```
+
+For the full OpenClaw webhook reference, see the [OpenClaw webhook documentation](https://docs.openclaw.ai/automation/webhook).
 
 ---
 

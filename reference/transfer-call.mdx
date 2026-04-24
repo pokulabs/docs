@@ -3,34 +3,53 @@ title: "Transfer Number"
 description: "Hand off a live call to a human."
 ---
 
-Set `POKU_TRANSFER_NUMBER` in your [installation config](/poku-skill/installation) to enable call transfers. The number must be in E.164 format (e.g. `+12223334444`) — see [Supported Countries](/reference/supported-countries) for eligible destinations.
-
-## How it works
-
-During an outbound call, the voice agent will transfer to your transfer number only if the person on the line explicitly asks to speak with a human. This gives the other party a way to reach you directly if needed — for example, if they have a question the agent can't answer or want to confirm details personally.
-
-The transfer is not triggered automatically. If the caller does not request it, the agent completes the call as normal.
-
-If the transfer number is not set, no transfer option is available on the call.
+During an outbound call, the voice agent will transfer to your transfer number if (1) the person on the line explicitly asks to speak with a human or (2) if you specify any transfer conditions in the prompt. This gives the other party a way to reach you directly if needed — for example, if they have a question the agent can't answer or want to confirm details personally.
 
 ---
 
-## API reference
+## Option 1: Via the API
+
+Pass `transferTo` in your call request:
 
 ```bash
-curl -s -X POST \
-  -H "Authorization: Bearer $POKU_API_KEY" \
+curl -X POST https://api.pokulabs.com/calls \
+  -H "Authorization: Bearer <your-api-key>" \
   -H "Content-Type: application/json" \
   -d '{
-    "message": "<drafted message>",
-    "to": "<normalized number>",
-    "transferNumber": "$POKU_TRANSFER_NUMBER"
-  }' \
-  https://api.pokulabs.com/phone/call
+    "prompt": "<drafted prompt>",
+    "to": "<destination number>",
+    "transferTo": "+12223334444"
+  }'
 ```
 
 | Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `message` | string | Yes | Structured prompt that drives the voice AI agent. |
+|---|---|---|---|
+| `prompt` | string | Yes | Structured prompt that drives the voice AI agent. |
 | `to` | string | Yes | Destination phone number in E.164 format. |
-| `transferNumber` | string | No | Number to transfer the call to if the agent cannot proceed. Must be E.164 format. |
+| `transferTo` | string | No | Number to transfer the call to if the other party asks to speak with a human. Must be E.164 format. |
+
+See [Supported Countries](/reference/supported-countries-calls) for eligible destinations.
+
+---
+
+## Option 2: Via the Poku Skill
+
+Set `POKU_TRANSFER_NUMBER` in your Poku Skill environment config to apply a permanent `transferTo` across all calls placed by the skill — no need to pass it on each request.
+
+```json
+{
+  "skills": {
+    "entries": {
+      "poku": {
+        "enabled": true,
+        "apiKey": "<your-poku-api-key>",
+        "env": {
+          "POKU_TRANSFER_NUMBER": "+12223334444"
+        }
+      }
+    }
+  }
+}
+```
+
+See [Poku Skill](/poku-skill/installation) for full installation instructions.

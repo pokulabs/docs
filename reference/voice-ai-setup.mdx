@@ -1,0 +1,85 @@
+---
+title: "Set Up"
+description: "Add Poku to your voice AI agent in minutes."
+---
+
+The fastest way to add Poku to your voice AI agent is to configure it as a custom function or tool call on your platform of choice. This walkthrough uses **email capture** as the example — one of the most common use cases, since emails are hard to capture reliably over voice.
+
+If you're using Retell AI or Vapi, see the platform-specific guides: [Retell AI](/integrations/retell) · [Vapi](/reference/voice-ai-context-injection)
+
+---
+
+<Steps>
+  <Step title="Create a new custom function or tool">
+    In your voice AI platform, navigate to the tools or functions section and create a new custom function.
+  </Step>
+  <Step title="Configure the HTTP call">
+    Set the tool name, description, method, URL, and authorization header:
+
+    | Field | Value |
+    |---|---|
+    | **Name** | `send_sms` |
+    | **Description** | `Use this tool to text the customer` |
+    | **Method** | `POST` |
+    | **URL** | `https://api.pokulabs.com/messages/sms` |
+    | **Authorization** | `Bearer <your-poku-api-key>` |
+  </Step>
+  <Step title="Define the input parameters">
+    Expose the following parameters so your agent can populate them at call time:
+
+    | Parameter | Type | Required | Description |
+    |---|---|---|---|
+    | `message` | string | Yes | Could you reply with your email address here? |
+    | `to` | string | Yes | The recipient's phone number in E.164 format. This is typically a dynamic variable depending on the platform — e.g. `{user_number}` or `{customer_phone_number}`. For testing, hardcode your own number. |
+    | `waitTime` | number | No | Seconds to hold open waiting for a reply. Set to `60` for email capture. |
+
+  </Step>
+  <Step title="Update your agent prompt">
+    Tell your agent when and how to use the tool. See the example prompt below.
+  </Step>
+</Steps>
+
+---
+
+## Example agent prompt
+
+```
+# Role
+You are a front desk agent for ACME.
+
+# Task
+Collect the customer's email address using the following process:
+
+## Step 1: Offer the text option
+Ask the customer: "I'll need to collect your email address. Would you prefer to text it to me instead of saying it out loud?"
+
+## Step 2: Handle their response
+- If the customer agrees to text: proceed to Step 3.
+- If the customer prefers to say it verbally: listen and collect the email address they speak aloud.
+
+## Step 3: Send the text request
+Say: "Perfect — I'm sending you a text right now where you can reply with your email address."
+Then immediately call the send_sms tool.
+
+## Important
+Always wait for the customer's preference before calling the tool.
+```
+
+---
+
+## Explore more
+
+<CardGroup cols={2}>
+  <Card title="Messages" icon="message" href="/reference/messages-overview">
+    Send a message and wait for a reply.
+  </Card>
+  <Card title="Forms" icon="wpforms" href="/reference/forms">
+    Send a structured form and receive all fields back.
+  </Card>
+  <Card title="Channel Cards" icon="layer-group" href="/reference/voice-ai-channel-cards">
+    Expose specific channels to your agent at runtime.
+  </Card>
+  <Card title="Follow Up Time" icon="clock" href="/reference/voice-ai-follow-up-time">
+    Capture replies that arrive after the call ends.
+  </Card>
+</CardGroup>

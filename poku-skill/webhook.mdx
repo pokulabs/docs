@@ -1,9 +1,9 @@
 ---
 title: "Webhook"
-description: "Set up a webhook so your agent can receive incoming texts and calls."
+description: "Set up a webhook so your agent can receive incoming texts, calls, and form responses."
 ---
 
-Poku needs a public URL to forward inbound SMS and call summaries to your agent. How you set this up depends on where your agent is running.
+Poku needs a public URL to forward inbound events to your agent. How you set this up depends on where your agent is running.
 
 ---
 
@@ -63,98 +63,109 @@ http://YOUR_VPS_IP:<your-agent-port>
 
 ## Step 2: Configure your agent
 
-Set up your agent to accept incoming POST requests at your chosen path. Poku sends a `POST` request with a JSON body for each event type.
-
-### SMS event (`phone.sms.received`)
+Set up your agent to accept incoming `POST` requests at your chosen path. Poku sends a JSON body for each event. All events share the same wrapper:
 
 ```json
 {
-  "eventType": "phone.sms.received",
+  "eventType": "<event-type>",
+  "payload": { ... }
+}
+```
+
+### `message.received`
+
+Fired when an inbound SMS, WhatsApp, or Slack message is received on your number or workspace.
+
+```json
+{
+  "eventType": "message.received",
   "payload": {
-    "reservedNumber": "+14157046427",
-    "from": "+12158133149",
-    "to": "+14157046427",
-    "body": "Hello!",
-    "mediaUrls": [],
-    "receivedAt": "2026-04-17T12:00:00.000Z"
+    "interactionId": "ia_abc123",
+    "medium": "sms",
+    "from": "+14155550199",
+    "to": "+14155550100",
+    "body": "Hey, are you available tomorrow?",
+    "mediaUrls": []
   }
 }
 ```
 
-| Field | Description |
-|-------|-------------|
-| `payload.reservedNumber` | Your Poku number that received the message |
-| `payload.from` | Phone number that sent the message |
-| `payload.to` | Phone number that received the message |
-| `payload.body` | Text content of the message |
-| `payload.mediaUrls` | Array of media URLs if the message included attachments (MMS) |
-| `payload.receivedAt` | ISO 8601 timestamp of when the message was received |
+| Field | Type | Description |
+|-------|------|-------------|
+| `payload.interactionId` | string? | Present when the message is a reply to a Poku interaction |
+| `payload.medium` | string | Channel the message arrived on: `sms`, `whatsapp`, or `slack` |
+| `payload.from` | string | Sender's phone number or Slack ID |
+| `payload.to` | string | Your Poku number or Slack channel that received the message |
+| `payload.body` | string | Text content of the message |
+| `payload.mediaUrls` | string[]? | Media attachments, if any (MMS) |
 
-### Call event (`phone.call.received`)
+---
+
+### `form.received`
+
+Fired when a recipient submits a form sent via SMS or WhatsApp.
 
 ```json
 {
-  "eventType": "phone.call.received",
+  "eventType": "form.received",
   "payload": {
+    "interactionId": "ia_abc123",
+    "values": {
+      "email": "johnsmith@gmail.com",
+      "phone": "+14155550199"
+    }
+  }
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `payload.interactionId` | string | ID of the interaction the form belongs to |
+| `payload.values` | object | Key-value map of the submitted form fields |
+
+---
+
+### `call.conversation.ended`
+
+Fired when an outbound call completes.
+
+```json
+{
+  "eventType": "call.conversation.ended",
+  "payload": {
+    "interactionId": "ia_abc123",
     "summary": "Caller confirmed their appointment for tomorrow at 3pm.",
-    "from": "+12158133149",
-    "to": "+14157046427"
+    "from": "+14155550199",
+    "to": "+14155550100"
   }
 }
 ```
 
-| Field | Description |
-|-------|-------------|
-| `payload.summary` | AI-generated summary of the call |
-| `payload.from` | Phone number that placed the call |
-| `payload.to` | Your Poku number that received the call |
+| Field | Type | Description |
+|-------|------|-------------|
+| `payload.interactionId` | string | ID of the call interaction |
+| `payload.summary` | string | AI-generated summary of the conversation |
+| `payload.from` | string | Phone number that placed the call |
+| `payload.to` | string | Phone number that received the call |
 
-**Example: OpenClaw config**
+---
 
-Add a Poku mapping to the `hooks` section of `~/.openclaw/openclaw.json`. For full details, see the [OpenClaw webhook documentation](https://docs.openclaw.ai/automation/webhook).
-
-```json
-{
-  "hooks": {
-    "enabled": true,
-    "token": "<openclaw-hooks-token>",
-    "transformsDir": "~/.openclaw/hooks/transforms",
-    "defaultSessionKey": "hook:ingress",
-    "allowRequestSessionKey": false,
-    "allowedSessionKeyPrefixes": [
-      "hook:"
-    ],
-    "mappings": [
-      {
-        "match": {
-          "path": "poku"
-        },
-        "action": "agent",
-        "agentId": "main",
-        "sessionKey": "hook:poku",
-        "wakeMode": "now",
-        "name": "Poku",
-        "deliver": true,
-        "channel": "telegram",
-        "to": "<your-telegram-id>",
-        "messageTemplate": "You received a message from {{payload.payload.from}}: \"{{payload.payload.body}}{{payload.payload.summary}}\""
-      }
-    ]
-  }
-}
-```
+Using OpenClaw? See the [OpenClaw installation guide](/poku-skill/openclaw) for the `openclaw.json` webhook config.
 
 ---
 
 ## Step 3: Register your webhook with Poku
 
-Register your public URL from Step 1 with Poku so inbound texts and calls get forwarded to your agent:
+Register your public URL from Step 1 with Poku so events get forwarded to your agent. Specify which event types you want to receive:
 
 ```bash
 curl -X POST "https://api.pokulabs.com/webhooks" \
   -H "Authorization: Bearer <your-poku-api-key>" \
   -H "Content-Type: application/json" \
-  -d '{"url":"<your-webhook-url>","eventTypes":["phone.sms.received","phone.call.received"]}'
+  -d '{
+    "url": "<your-webhook-url>",
+    "eventTypes": ["message.received", "form.received", "call.conversation.ended"]
+  }'
 ```
 
 If your agent requires an authorization header on incoming requests, include it via the optional `headers` field:
@@ -163,31 +174,35 @@ If your agent requires an authorization header on incoming requests, include it 
 curl -X POST "https://api.pokulabs.com/webhooks" \
   -H "Authorization: Bearer <your-poku-api-key>" \
   -H "Content-Type: application/json" \
-  -d '{"url":"<your-webhook-url>","eventTypes":["phone.sms.received","phone.call.received"],"headers":{"Authorization":"Bearer <your-agent-token>"}}'
+  -d '{
+    "url": "<your-webhook-url>",
+    "eventTypes": ["message.received", "form.received", "call.conversation.ended"],
+    "headers": {"Authorization": "Bearer <your-agent-token>"}
+  }'
 ```
+
+See the [Create Webhook](/api-reference/webhooks/create-webhook) API reference for all available parameters.
 
 ---
 
 ## Verify your webhook
 
-You can check which webhook URL is currently registered on your account:
+You can check which webhooks are currently registered on your account:
 
 ```bash
 curl -X GET https://api.pokulabs.com/webhooks \
   -H 'Authorization: Bearer <your-poku-api-key>'
 ```
 
-<Note>
-  This endpoint returns a list of registered webhooks.
-</Note>
+See the [List Webhooks](/api-reference/webhooks/list-webhooks) API reference for the full response schema.
 
 ---
 
 ## Delete your webhook
 
-You can delete any webhook URL registered on your account:
-
 ```bash
 curl -X DELETE "https://api.pokulabs.com/webhooks/<webhook-id>" \
   -H "Authorization: Bearer <your-poku-api-key>"
 ```
+
+See the [Delete Webhook](/api-reference/webhooks/delete-webhook) API reference for details.

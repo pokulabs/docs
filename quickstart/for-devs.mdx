@@ -1,0 +1,69 @@
+---
+title: "Quick Start"
+description: "Test the Poku API in minutes — send an SMS, send a WhatsApp, and place a phone call."
+---
+
+## Prerequisite: Get your API key
+
+Generate your API key from the [Poku dashboard](https://dashboard.pokulabs.com). You'll need it for every request below.
+
+---
+
+## Send your first SMS
+
+```bash
+curl -X POST https://api.pokulabs.com/messages/sms \
+  -H "Authorization: Bearer <your-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "hello there!",
+    "to": "`<your-phone-number>`"
+  }'
+```
+
+Replace `<your-api-key>` with your API key, and `<your-phone-number>` with your own number in [E.164 format](https://en.wikipedia.org/wiki/E.164). (Example: `+12155551234`) Check [supported countries](/reference/supported-countries) for SMS availability.
+
+---
+
+## Send your first WhatsApp message
+
+```bash
+curl -X POST https://api.pokulabs.com/messages/whatsapp \
+  -H "Authorization: Bearer <your-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "hello there!",
+    "to": "`<your-phone-number>`"
+  }'
+```
+
+Replace `<your-api-key>` with your API key, and `<your-phone-number>` with your own number in [E.164 format](https://en.wikipedia.org/wiki/E.164). (Example: `+12155551234`) The message will arrive wrapped in the Poku WhatsApp template: *"Notification from AI agent: hello there! No response required."*
+
+---
+
+## Place your first call
+
+```bash
+curl -X POST https://api.pokulabs.com/calls \
+  -H "Authorization: Bearer <your-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "You are a friendly voice assistant agent calling on behalf of Poku. You are calling to see how the user is finding their Poku welcome experience.",
+    "to": "`<your-phone-number>`"
+  }'
+```
+
+Replace `<your-api-key>` with your API key, and `<your-phone-number>` with your own number in [E.164 format](https://en.wikipedia.org/wiki/E.164). (Example: `+12155551234`). Check [supported countries](/reference/supported-countries) for calling availability.
+
+---
+
+## What's next?
+
+<CardGroup cols={2}>
+  <Card title="Install the Poku Skill" icon="puzzle-piece" href="/poku-skill/installation">
+    Give your agent (e.g., Openclaw, Cursor, Claude Code, and more) the ability to call and message.
+  </Card>
+  <Card title="Explore the API" icon="code" href="/api-reference/calls/place-outbound-call">
+    Browse the full API reference to explore calls, messages, forms, and more.
+  </Card>
+</CardGroup>
