@@ -8,8 +8,9 @@ description: "Two ways to place an outbound call with Poku."
 The simplest way to place a call — send a POST request to the outbound call endpoint with a prompt and a phone number.
 
 **Default settings:**
-- Language: English (`en-US`)
-- Voice: Female
+- `language`: `en-US`
+- `voice`: `female`
+- `waitForCallEnd`: `false`
 
 ```bash
 curl -X POST https://api.pokulabs.com/calls \
@@ -21,15 +22,29 @@ curl -X POST https://api.pokulabs.com/calls \
   }'
 ```
 
-### Customizing voice and language
+### Waiting for the call to end
 
-Pass the `language` parameter to optimize speech recognition for a specific dialect. For example, `en-GB` for British English. See the full list of [supported languages](/api-reference/calls/place-outbound-call).
+By default, Poku starts the call and returns an `interactionId` immediately. Use that ID with [GET /interactions/:id/status](/api-reference/interactions/get-interaction-status) to check whether the call has ended.
+
+Set `waitForCallEnd` to `true` when you want the HTTP request to stay open until the call finishes:
 
 ```json
 {
   "prompt": "...",
   "to": "+12155551234",
-  "language": "en-GB"
+  "waitForCallEnd": true
+}
+```
+
+### Customizing voice and language
+
+Pass the `language` parameter to optimize speech recognition for a specific dialect. For example, `fr-FR` for British English. See the full list of [supported languages](/api-reference/calls/place-outbound-call#body-language).
+
+```json
+{
+  "prompt": "...",
+  "to": "+12155551234",
+  "language": "fr-FR"
 }
 ```
 

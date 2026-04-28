@@ -116,6 +116,12 @@
             ]
           },
           {
+            "group": "Interactions",
+            "pages": [
+              "api-reference/interactions/get-interaction-status"
+            ]
+          },
+          {
             "group": "Numbers",
             "pages": [
               "api-reference/numbers/list-available-numbers",

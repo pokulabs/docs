@@ -26,6 +26,9 @@
       "name": "forms"
     },
     {
+      "name": "interactions"
+    },
+    {
       "name": "numbers"
     },
     {
@@ -39,6 +42,7 @@
           "calls"
         ],
         "summary": "Place Outbound Call",
+        "description": "Place an outbound AI phone call. By default, the request returns immediately with an `interactionId` while the call continues in the background. Set `waitForCallEnd` to `true` to keep the request open until the call ends and return the call summary.",
         "operationId": "createCall",
         "requestBody": {
           "required": true,
@@ -52,18 +56,29 @@
         },
         "responses": {
           "200": {
-            "description": "Call completed successfully.",
+            "description": "Call started or completed successfully.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CallResponse"
                 },
-                "example": {
-                  "response": "ABC restaurant confirmed your reservation for 2 people at 6 pm tomorrow.",
-                  "call": {
-                    "recordingUrl": "https://cdn.example.com/recordings/abc123.wav"
+                "examples": {
+                  "async": {
+                    "summary": "waitForCallEnd omitted or false",
+                    "value": {
+                      "interactionId": "f3f7870f-30f5-4bf2-83b0-a05bc140030c"
+                    }
                   },
-                  "interactionId": "f3f7870f-30f5-4bf2-83b0-a05bc140030c"
+                  "completed": {
+                    "summary": "waitForCallEnd true",
+                    "value": {
+                      "response": "ABC restaurant confirmed your reservation for 2 people at 6 pm tomorrow.",
+                      "call": {
+                        "recordingUrl": "https://cdn.example.com/recordings/abc123.wav"
+                      },
+                      "interactionId": "f3f7870f-30f5-4bf2-83b0-a05bc140030c"
+                    }
+                  }
                 }
               }
             }
@@ -111,6 +126,70 @@
             }
           }
         ]
+      }
+    },
+    "/interactions/{interactionId}/status": {
+      "get": {
+        "tags": [
+          "interactions"
+        ],
+        "summary": "Get Interaction Status",
+        "description": "Returns the current status for an interaction. Use this to poll an interaction created by an async request, such as an outbound call placed with `waitForCallEnd` set to `false`.",
+        "operationId": "getInteractionStatus",
+        "parameters": [
+          {
+            "name": "interactionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The interaction ID returned by a Poku API request."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Interaction status returned successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InteractionStatusResponse"
+                },
+                "examples": {
+                  "pending": {
+                    "summary": "Interaction still in progress",
+                    "value": {
+                      "interactionId": "f3f7870f-30f5-4bf2-83b0-a05bc140030c",
+                      "status": "pending",
+                      "createdAt": "2026-04-28T22:30:00.000Z"
+                    }
+                  },
+                  "ended": {
+                    "summary": "Call interaction completed",
+                    "value": {
+                      "interactionId": "f3f7870f-30f5-4bf2-83b0-a05bc140030c",
+                      "status": "ended",
+                      "createdAt": "2026-04-28T22:30:00.000Z",
+                      "completionEvent": {
+                        "event": "call.conversation.ended",
+                        "payload": {
+                          "interactionId": "f3f7870f-30f5-4bf2-83b0-a05bc140030c",
+                          "summary": "ABC restaurant confirmed your reservation for 2 people at 6 pm tomorrow.",
+                          "from": "+12155551234",
+                          "to": "+14155550100"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
       }
     },
     "/messages/sms": {
@@ -1020,13 +1099,10 @@
       },
       "CallResponse": {
         "type": "object",
-        "required": [
-          "response"
-        ],
         "properties": {
           "response": {
             "type": "string",
-            "description": "A natural language summary of the call outcome."
+            "description": "Returned when `waitForCallEnd` is `true`. A natural language summary of the call outcome."
           },
           "call": {
             "type": "object",
@@ -1041,7 +1117,7 @@
           },
           "interactionId": {
             "type": "string",
-            "description": "Unique identifier for this call interaction."
+            "description": "Unique identifier for this call interaction. Returned for both async and wait-for-completion requests."
           }
         },
         "additionalProperties": false
@@ -1648,6 +1724,12 @@
               "female"
             ],
             "default": "female"
+          },
+          "waitForCallEnd": {
+            "type": "boolean",
+            "description": "When `false` or omitted, the request returns immediately with an `interactionId` while the call continues in the background. Use [Get Interaction Status](/api-reference/interactions/get-interaction-status) to check whether the call has ended.\n\nWhen `true`, the HTTP request stays open until the call ends, then returns the call summary and recording URL when available.",
+            "default": false,
+            "example": true
           }
         },
         "additionalProperties": false
@@ -2258,6 +2340,176 @@
             "description": "Either this parameter or `waitTime` must be supplied.\n\nAfter `waitTime` expires, how long Poku continues to accept a form submission. When the form is submitted within this window, the response is sent to any webhooks you've configured. Once this window closes, the form will show \"This form has expired\".",
             "example": 6000,
             "default": 90
+          }
+        },
+        "additionalProperties": false
+      },
+      "InteractionStatusResponse": {
+        "type": "object",
+        "required": [
+          "interactionId",
+          "status",
+          "createdAt"
+        ],
+        "properties": {
+          "interactionId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the interaction."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "ended"
+            ],
+            "description": "`pending` means Poku is still waiting for a response or call completion. `ended` means the interaction is complete or its response window has expired."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the interaction was created."
+          },
+          "completionEvent": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/MessageReceivedCompletionEvent"
+              },
+              {
+                "$ref": "#/components/schemas/FormReceivedCompletionEvent"
+              },
+              {
+                "$ref": "#/components/schemas/CallConversationEndedCompletionEvent"
+              }
+            ],
+            "description": "Present when the interaction completed with a response. The shape matches the corresponding webhook event payload."
+          }
+        },
+        "additionalProperties": false
+      },
+      "MessageReceivedCompletionEvent": {
+        "type": "object",
+        "required": [
+          "event",
+          "payload"
+        ],
+        "properties": {
+          "event": {
+            "type": "string",
+            "enum": [
+              "message.received"
+            ]
+          },
+          "payload": {
+            "type": "object",
+            "required": [
+              "interactionId",
+              "medium",
+              "from",
+              "to",
+              "body"
+            ],
+            "properties": {
+              "interactionId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "medium": {
+                "$ref": "#/components/schemas/Medium"
+              },
+              "from": {
+                "type": "string"
+              },
+              "to": {
+                "type": "string"
+              },
+              "body": {
+                "type": "string"
+              },
+              "mediaUrls": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "FormReceivedCompletionEvent": {
+        "type": "object",
+        "required": [
+          "event",
+          "payload"
+        ],
+        "properties": {
+          "event": {
+            "type": "string",
+            "enum": [
+              "form.received"
+            ]
+          },
+          "payload": {
+            "type": "object",
+            "required": [
+              "interactionId",
+              "values"
+            ],
+            "properties": {
+              "interactionId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "values": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "CallConversationEndedCompletionEvent": {
+        "type": "object",
+        "required": [
+          "event",
+          "payload"
+        ],
+        "properties": {
+          "event": {
+            "type": "string",
+            "enum": [
+              "call.conversation.ended"
+            ]
+          },
+          "payload": {
+            "type": "object",
+            "required": [
+              "interactionId",
+              "summary",
+              "from",
+              "to"
+            ],
+            "properties": {
+              "interactionId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "summary": {
+                "type": "string"
+              },
+              "from": {
+                "type": "string"
+              },
+              "to": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
           }
         },
         "additionalProperties": false
