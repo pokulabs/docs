@@ -1242,12 +1242,12 @@
               "text",
               "textarea",
               "email",
-              "phoneNumber",
+              "phone_number",
               "select",
               "checkbox",
               "address"
             ],
-            "description": "The input type for the field:\n- `text` \u2014 single-line text input\n- `textarea` \u2014 multi-line text input\n- `email` \u2014 text input with built-in validation (checks for `@` and a valid domain)\n- `phoneNumber` \u2014 lets the recipient select or search a country code from a dropdown, then enter their phone number\n- `select` \u2014 dropdown with predefined options (see `options`)\n- `checkbox` \u2014 boolean checkbox\n- `address` \u2014 text input with address validation powered by Google Places API, ensuring only real addresses are accepted"
+            "description": "The input type for the field:\n- `text` \u2014 single-line text input\n- `textarea` \u2014 multi-line text input\n- `email` \u2014 text input with built-in validation (checks for `@` and a valid domain)\n- `phone_number` \u2014 lets the recipient select or search a country code from a dropdown, then enter their phone number\n- `select` \u2014 dropdown with predefined options (see `options`)\n- `checkbox` \u2014 boolean checkbox\n- `address` \u2014 text input with address validation powered by Google Places API, ensuring only real addresses are accepted"
           },
           "required": {
             "type": "boolean",
@@ -1274,7 +1274,7 @@
             "items": {
               "$ref": "#/components/schemas/CaptureFormStringValidationRule"
             },
-            "description": "Custom validation rules applied to the field. Each rule requires a `title` \u2014 which is shown below the field, and a `pattern`, a regular expression the input must match.\n\nOnly valid for `text`, `textarea`, `email`, and `phoneNumber` fields.\n\n**Example:**\n```json\n[\n  { \"title\": \"Must be 5 to 10 characters long\", \"pattern\": \"^.{5,10}$\" },\n  { \"title\": \"Starts with a letter\", \"pattern\": \"^[A-Za-z].*\" },\n  { \"title\": \"Does not contain Z\", \"pattern\": \"^(?!.*[Z]).*$\" }\n]\n```"
+            "description": "Custom validation rules applied to the field. Each rule requires a `title` \u2014 which is shown below the field, and a `pattern`, a regular expression the input must match.\n\nOnly valid for `text`, `textarea`, `email`, and `phone_number` fields.\n\n**Example:**\n```json\n[\n  { \"title\": \"Must be 5 to 10 characters long\", \"pattern\": \"^.{5,10}$\" },\n  { \"title\": \"Starts with a letter\", \"pattern\": \"^[A-Za-z].*\" },\n  { \"title\": \"Does not contain Z\", \"pattern\": \"^(?!.*[Z]).*$\" }\n]\n```"
           }
         },
         "additionalProperties": false
