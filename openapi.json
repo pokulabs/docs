@@ -1887,13 +1887,6 @@
             "items": {
               "$ref": "#/components/schemas/WebhookEventType"
             }
-          },
-          "reservedPhoneNumberIds": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "uuid"
-            }
           }
         },
         "additionalProperties": false
@@ -1925,13 +1918,6 @@
             "items": {
               "$ref": "#/components/schemas/WebhookEventType"
             }
-          },
-          "reservedPhoneNumberIds": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "uuid"
-            }
           }
         },
         "additionalProperties": false
@@ -1947,7 +1933,6 @@
           "headers",
           "eventTypes",
           "interactionChannelId",
-          "reservedPhoneNumberIds",
           "isActive"
         ],
         "properties": {
@@ -1995,13 +1980,6 @@
             "type": "string",
             "format": "uuid",
             "nullable": true
-          },
-          "reservedPhoneNumberIds": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "uuid"
-            }
           },
           "isActive": {
             "type": "boolean"
