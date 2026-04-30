@@ -1,0 +1,77 @@
+---
+title: "WebSockets"
+description: "Subscribe to real-time Poku events over a WebSocket connection."
+---
+
+Use WebSockets when your agent wants to receive Poku events over an open connection instead of exposing an HTTP webhook endpoint.
+
+The WebSocket stream emits the same event types as webhooks. You can subscribe to `message.received`, `form.received`, and `call.conversation.ended`.
+
+## Connect
+
+Connect to the Poku API WebSocket endpoint:
+
+```bash
+wss://ws.pokulabs.com
+```
+
+Authenticate with your Poku API key using a bearer token:
+
+```js
+const ws = new WebSocket("ws://api.pokulabs.com", {
+  headers: {
+    Authorization: "Bearer <your-poku-api-key>",
+  },
+});
+```
+
+Some WebSocket clients, especially browser clients, cannot send custom headers. In those cases, pass the API key in the `api_key` query parameter:
+
+```js
+const ws = new WebSocket("wss://api.pokulabs.com?api_key=<your-poku-api-key>");
+```
+
+If authentication fails, Poku closes the connection with code `4001`.
+
+## Subscribe to events
+
+After connecting, send a `subscribe` message with the events you want to receive:
+
+```json
+{
+  "type": "subscribe",
+  "events": ["message.received", "form.received", "call.conversation.ended"]
+}
+```
+
+Poku confirms the active subscriptions:
+
+```json
+{
+  "type": "subscribed",
+  "payload": {
+    "events": ["message.received", "form.received", "call.conversation.ended"]
+  }
+}
+```
+
+## Event format
+
+WebSocket events use the same event names and payload shapes as webhooks. The only difference is the wrapper field: webhooks send `eventType`, while WebSockets send `type`.
+
+```json
+{
+  "type": "message.received",
+  "payload": {
+    "interactionId": "ia_abc123",
+    "medium": "sms",
+    "from": "+14155550199",
+    "to": "+14155550100",
+    "body": "Hey, are you available tomorrow?",
+    "mediaUrls": []
+  }
+}
+```
+
+See the [Webhook](/poku-skill/webhook) page for the full event payload reference.
+

@@ -133,6 +133,7 @@
           {
             "group": "Webhooks",
             "pages": [
+              "api-reference/websockets",
               "api-reference/webhooks/create-webhook",
               "api-reference/webhooks/delete-webhook",
               "api-reference/webhooks/update-webhook",
