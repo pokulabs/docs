@@ -1,0 +1,58 @@
+---
+title: "Make.com Setup"
+description: "Route incoming SMS through Make.com with an AI agent + human handoff toggle."
+---
+
+This example scenario routes incoming SMS messages through a lightweight Make.com workflow, with Poku controlling whether your AI agent responds.
+
+<Frame>
+  <img src="/images/Make.png" alt="Make.com scenario overview" />
+</Frame>
+
+---
+
+## Prerequisites
+
+Before setting up, grab your **Poku API key** from the [Poku dashboard](https://dashboard.pokulabs.com/). You'll need it to enable the agent toggle in your workflow.
+
+---
+
+## How it works
+
+<Steps>
+  <Step title="Incoming webhook">
+    Configure your Twilio number to send all incoming SMS messages to this webhook, triggering the workflow.
+
+    <Frame>
+      <img src="/images/Twiliowebhook.png" alt="Twilio webhook configuration" />
+    </Frame>
+  </Step>
+  <Step title="204 response node">
+    Immediately returns a `204 No Content` response to Twilio, preventing Make.com from sending an unwanted "Accepted" reply.
+  </Step>
+  <Step title="Poku toggle check">
+    Poku checks whether your AI agent is enabled:
+
+    **Agent OFF** — the workflow stops; the message is not forwarded to the agent.
+
+    <Frame>
+      <img src="/images/Humanmode.png" alt="Human mode — agent off" />
+    </Frame>
+
+    **Agent ON** — the message continues to your AI agent (in this example, a ChatGPT node), which generates and sends a reply.
+
+    <Frame>
+      <img src="/images/AImode.png" alt="AI mode — agent on" />
+    </Frame>
+  </Step>
+</Steps>
+
+---
+
+## Import the scenario
+
+[Download the Make.com scenario](https://us2.make.com/public/shared-scenario/t9b1MxoV1OU/poku-sms-dashboard-integration) and import it into your account.
+
+<Warning>
+  After importing, replace all placeholder credentials with your own Twilio credentials and Poku API key.
+</Warning>

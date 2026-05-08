@@ -1,0 +1,57 @@
+---
+title: "n8n Setup"
+description: "Connect Poku Inbox to an external agent brain (e.g., Retell.ai) via n8n."
+---
+
+If your AI agent already lives on another platform, you can wire Poku Inbox into it via n8n. This example uses [Retell.ai](https://retell.ai) as the agent brain.
+
+<Frame>
+  <img src="/images/n8n.png" alt="n8n workflow overview" />
+</Frame>
+
+---
+
+## Prerequisites
+
+Before setting up, grab your **Poku API key** from the [Poku dashboard](https://dashboard.pokulabs.com/). You'll need it to enable the agent toggle in your workflow.
+
+---
+
+## How it works
+
+<Steps>
+  <Step title="Incoming Twilio message">
+    Incoming Twilio messages arrive at your n8n workflow.
+  </Step>
+  <Step title="Check for existing conversation">
+    The workflow checks whether a conversation already exists for the incoming phone number:
+
+    - **No existing conversation** — a new chat is created.
+    - **Existing conversation** — the chat is updated with the new message.
+  </Step>
+  <Step title="Poku toggle check">
+    Poku checks whether the agent is enabled before forwarding the message to your Retell agent.
+
+    **Agent OFF** — the workflow stops; the message is not forwarded to the agent.
+
+    <Frame>
+      <img src="/images/Humanmode.png" alt="Human mode — agent off" />
+    </Frame>
+
+    **Agent ON** — the message continues to your Retell agent, which generates and sends a reply.
+
+    <Frame>
+      <img src="/images/AImode.png" alt="AI mode — agent on" />
+    </Frame>
+  </Step>
+</Steps>
+
+---
+
+## Import the workflow
+
+<a href="/files/poku-inbox-n8n.json" download>Download the n8n workflow</a> and import it into your n8n account.
+
+<Warning>
+  After importing, replace all placeholder credentials with your own Twilio, Retell, and Poku API key details.
+</Warning>

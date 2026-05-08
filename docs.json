@@ -37,6 +37,14 @@
                   "reference/calls",
                   "reference/sms"
                 ]
+              },
+              {
+                "group": "For Poku Inbox Users",
+                "pages": [
+                  "reference/poku-inbox-overview",
+                  "reference/poku-inbox-make",
+                  "reference/poku-inbox-n8n"
+                ]
               }
             ]
           },
