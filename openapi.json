@@ -722,7 +722,7 @@
           "numbers"
         ],
         "summary": "Reserve a number",
-        "description": "Reserve a phone number for your account. Once reserved, it can be used for calling and texting.\n\nUse [List available numbers](/api-reference/numbers/list-available-numbers) to find a number first. During beta, each account is limited to one reserved number at a time.",
+        "description": "Reserve a phone number for your account. Once reserved, it can be used for calling and texting.\n\nUse [List available numbers](/api-reference/numbers/list-available-numbers) to find a number first.",
         "operationId": "reserveNumberAlias",
         "requestBody": {
           "required": true,
@@ -764,7 +764,7 @@
                   }
                 },
                 "example": {
-                  "message": "You can only reserve one phone number at this time."
+                  "message": "Phone number must be in E.164 format (e.g. +14155551234)"
                 }
               }
             }
